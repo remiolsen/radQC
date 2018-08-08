@@ -210,7 +210,7 @@ process trimmomatic {
     script:
     """
     trimmomatic PE \
-    -threads 1 \
+    -threads ${task.cpus} \
     -trimlog ${name}_trim.log \
     -phred33 \
     ${reads} trim_${reads[0]} U_${reads[0]} trim_${reads[1]} U_${reads[1]} \
