@@ -86,6 +86,10 @@ It is not possible to run a mixture of single-end and paired-end files in one ru
 
 ## Reference Genomes
 
+```
+NB! Not implemented. For future use of reference-based Stacks
+```
+
 The pipeline config files come bundled with paths to the illumina iGenomes reference index files. If running with docker or AWS, the configuration is set up to use the [AWS-iGenomes](https://ewels.github.io/AWS-iGenomes/) resource.
 
 ### `--genome` (using iGenomes)
@@ -138,9 +142,9 @@ Running the pipeline on AWS Batch requires a couple of specific parameters to be
 ### `--awsqueue`
 The JobQueue that you intend to use on AWS Batch.
 ### `--awsregion`
-The AWS region to run your job in. Default is set to `eu-west-1` but can be adjusted to your needs. 
+The AWS region to run your job in. Default is set to `eu-west-1` but can be adjusted to your needs.
 
-Please make sure to also set the `-w/--work-dir` and `--outdir` parameters to a S3 storage bucket of your choice - you'll get an error message notifying you if you didn't. 
+Please make sure to also set the `-w/--work-dir` and `--outdir` parameters to a S3 storage bucket of your choice - you'll get an error message notifying you if you didn't.
 
 ## Other command line parameters
 ### `--outdir`

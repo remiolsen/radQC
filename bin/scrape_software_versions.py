@@ -8,12 +8,16 @@ regexes = {
     'Nextflow': ['v_nextflow.txt', r"(\S+)"],
     'FastQC': ['v_fastqc.txt', r"FastQC v(\S+)"],
     'MultiQC': ['v_multiqc.txt', r"multiqc, version (\S+)"],
+    'Trimmomatic': ['v_trimmomatic.txt', r"(\S+)"],
+    'Stacks': ['v_stacks.txt', r"ustacks (\S+)"],
 }
 results = OrderedDict()
 results['nf-core/radseq'] = '<span style="color:#999999;\">N/A</span>'
 results['Nextflow'] = '<span style="color:#999999;\">N/A</span>'
 results['FastQC'] = '<span style="color:#999999;\">N/A</span>'
 results['MultiQC'] = '<span style="color:#999999;\">N/A</span>'
+results['Trimmomatic'] = '<span style="color:#999999;\">N/A</span>'
+results['Stacks'] = '<span style="color:#999999;\">N/A</span>'
 
 # Search each file using its regex
 for k, v in regexes.items():

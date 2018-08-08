@@ -25,7 +25,8 @@ def helpMessage() {
 
     Mandatory arguments:
       --reads                       Path to input data (must be surrounded with quotes)
-      --genome                      Name of iGenomes reference
+      --enzyme                      [Stacks] Which restriction enzyme to use
+
       -profile                      Configuration profile to use. docker / awsbatch
 
     Options:
@@ -33,6 +34,11 @@ def helpMessage() {
 
     References                      If not specified in the configuration file or you wish to overwrite any of the references.
       --fasta                       Path to Fasta reference
+      --small-m                     [Stacks] parameter
+      --small-n                     [Stacks] parameter
+      --big-m                       [Stacks] parameter
+      --trim-adapters               Do read-trimming [true/false]
+      --trim-truncate               Do read trucation
 
     Other options:
       --outdir                      The output directory where the results will be saved
@@ -96,19 +102,19 @@ if( workflow.profile == 'awsbatch') {
              .from(params.readPaths)
              .map { row -> [ row[0], [file(row[1][0])]] }
              .ifEmpty { exit 1, "params.readPaths was empty - no input files supplied" }
-             .into { read_files_fastqc; read_files_trimming }
+             .into { read_files_trim }
      } else {
          Channel
              .from(params.readPaths)
              .map { row -> [ row[0], [file(row[1][0]), file(row[1][1])]] }
              .ifEmpty { exit 1, "params.readPaths was empty - no input files supplied" }
-             .into { read_files_fastqc; read_files_trimming }
+             .into { read_files_trim }
      }
  } else {
      Channel
          .fromFilePairs( params.reads, size: params.singleEnd ? 1 : 2 )
          .ifEmpty { exit 1, "Cannot find any reads matching: ${params.reads}\nNB: Path needs to be enclosed in quotes!\nIf this is single-end data, please specify --singleEnd on the command line." }
-         .into { read_files_fastqc; read_files_trimming }
+         .into { read_files_trim }
  }
 
 
@@ -144,8 +150,8 @@ summary['Output dir']     = params.outdir
 summary['Script dir']     = workflow.projectDir
 summary['Config Profile'] = workflow.profile
 if(workflow.profile == 'awsbatch'){
-   summary['AWS Region' = params.awsregion]
-   summary['AWS Queue' = params.awsqueue]
+   summary['AWS Region'] = params.awsregion
+   summary['AWS Queue'] = params.awsqueue
 }
 if(params.email) summary['E-mail Address'] = params.email
 log.info summary.collect { k,v -> "${k.padRight(15)}: $v" }.join("\n")
@@ -181,22 +187,73 @@ process get_software_versions {
     echo $workflow.nextflow.version > v_nextflow.txt
     fastqc --version > v_fastqc.txt
     multiqc --version > v_multiqc.txt
+    trimmomatic -version > v_trimmomatic.txt
+    ustacks -v 2> v_stacks.txt || true
     scrape_software_versions.py > software_versions_mqc.yaml
     """
+
 }
 
 
 
-/*
- * STEP 1 - FastQC
- */
+process trimmomatic {
+    tag "$name"
+    publishDir "${params.outdir}/trimmed_reads", mode: 'copy'
+
+    input:
+    set val(name), file(reads) from read_files_trim
+
+    output:
+    set val(name), file("trim_*.fastq.gz") into trimP_files
+    file "*_trim.out" into trim_logs
+
+    script:
+    """
+    trimmomatic PE \
+    -threads 1 \
+    -trimlog ${name}_trim.log \
+    -phred33 \
+    ${reads} trim_${reads[0]} U_${reads[0]} trim_${reads[1]} U_${reads[1]} \
+    ILLUMINACLIP:${params.trim_adapters}:2:30:10 LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 \
+    MINLEN:${params.trim_truncate} CROP:${params.trim_truncate} 2> ${name}_trim.out
+    """
+
+}
+
+
+process process_radtags {
+    tag "$name"
+    publishDir "${params.outdir}/process_radtags", mode: 'copy',
+      saveAs: {filename ->
+        if(filename.indexOf('.log') > 0) "${name}_${filename}"
+        else "${filename}"
+      }
+
+    input:
+    set val(name), file(reads) from trimP_files
+
+    output:
+    file "*process_radtags.log"
+    file "*.fq.gz" into processed_reads, read_files_fastqc
+    val name  into population_names, fastqc_names
+
+    script:
+    """
+    process_radtags -i gzfastq -1 ${reads[0]} -2 ${reads[1]} -e ${params.enzyme} -r -o .
+    rm *.rem.*.fq.gz
+    mv *.1.fq.gz ${name}.1.fq.gz
+    mv *.2.fq.gz ${name}.2.fq.gz
+    """
+}
+
 process fastqc {
     tag "$name"
     publishDir "${params.outdir}/fastqc", mode: 'copy',
         saveAs: {filename -> filename.indexOf(".zip") > 0 ? "zips/$filename" : "$filename"}
 
     input:
-    set val(name), file(reads) from read_files_fastqc
+    file(reads) from read_files_fastqc
+    val(name) from fastqc_names
 
     output:
     file "*_fastqc.{zip,html}" into fastqc_results
@@ -207,17 +264,36 @@ process fastqc {
     """
 }
 
+process denovo_stacks {
+    publishDir "${params.outdir}/denovo_stacks", mode: 'copy'
 
+    input:
+    file("processed/*") from processed_reads.collect()
+    val names from population_names.collect()
 
-/*
- * STEP 2 - MultiQC
- */
+    output:
+    file "*.tsv.gz"
+    file "*.tsv"
+    file "denovo_map.log" into denovo_log
+    file "*populations.log"
+    file "popmap.txt"
+
+    script:
+    p_string = ""
+    names.each {p_string = p_string + "$it\t1\n"}
+    """
+    printf "${p_string}" > popmap.txt
+    denovo_map.pl --samples processed/ --popmap popmap.txt -o . -m ${params.small_m} -M ${params.big_m} -n ${params.small_n} -T ${task.cpus}
+    """
+}
+
 process multiqc {
     publishDir "${params.outdir}/MultiQC", mode: 'copy'
 
     input:
     file multiqc_config
     file ('fastqc/*') from fastqc_results.collect()
+    file ('trimmomatic/*') from trim_logs.collect()
     file ('software_versions/*') from software_versions_yaml
 
     output:
@@ -252,7 +328,6 @@ process output_documentation {
     markdown_to_html.r $output_docs results_description.html
     """
 }
-
 
 
 /*
