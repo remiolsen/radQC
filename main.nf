@@ -38,7 +38,7 @@ def helpMessage() {
       --small-n                     [Stacks] parameter
       --big-m                       [Stacks] parameter
       --trim-adapters               Do read-trimming [true/false]
-      --trim-truncate               Do read trucation
+      --trim-truncate               Truncate reads reads after trimming to a fixed length. Set this to 0 to disable [100]
 
     Other options:
       --outdir                      The output directory where the results will be saved
@@ -209,6 +209,10 @@ process trimmomatic {
     file "*_trim.out" into trim_logs
 
     script:
+    trunc_string = "MINLEN:30"
+    if(params.trim_truncate > 30){
+      trunc_string = "MINLEN:${params.trim_truncate} CROP:${params.trim_truncate}"
+    }
     """
     trimmomatic PE \
     -threads ${task.cpus} \
@@ -273,10 +277,7 @@ process denovo_stacks {
     val names from population_names.collect()
 
     output:
-    file "*.tsv.gz"
-    file "*.tsv"
-    file "denovo_map.log" into denovo_log
-    file "*populations.log"
+    file "*.{tsv.gz,tsv,log.tsv,distribs,calls}" denovo_results
     file "popmap.txt"
 
     script:
