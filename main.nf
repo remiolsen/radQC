@@ -34,11 +34,11 @@ def helpMessage() {
 
     References                      If not specified in the configuration file or you wish to overwrite any of the references.
       --fasta                       Path to Fasta reference
-      --small-m                     [Stacks] parameter
-      --small-n                     [Stacks] parameter
-      --big-m                       [Stacks] parameter
-      --trim-adapters               Do read-trimming [true/false]
-      --trim-truncate               Truncate reads reads after trimming to a fixed length. Set this to 0 to disable [100]
+      --small_m                     [Stacks] parameter
+      --small_n                     [Stacks] parameter
+      --big_m                       [Stacks] parameter
+      --trim_adapters               Do read-trimming [true/false]
+      --trim_truncate               Truncate reads reads after trimming to a fixed length. Minimum 30. [100]
 
     Other options:
       --outdir                      The output directory where the results will be saved
@@ -209,7 +209,7 @@ process trimmomatic {
     file "*_trim.out" into trim_logs
 
     script:
-    trunc_string = "MINLEN:30"
+    trunc_string = "MINLEN:30 CROP:30"
     if(params.trim_truncate > 30){
       trunc_string = "MINLEN:${params.trim_truncate} CROP:${params.trim_truncate}"
     }
@@ -220,7 +220,7 @@ process trimmomatic {
     -phred33 \
     ${reads} trim_${reads[0]} U_${reads[0]} trim_${reads[1]} U_${reads[1]} \
     ILLUMINACLIP:${params.trim_adapters}:2:30:10 LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 \
-    MINLEN:${params.trim_truncate} CROP:${params.trim_truncate} 2> ${name}_trim.out
+    ${trunc_string} 2> ${name}_trim.out
     """
 
 }
@@ -270,19 +270,23 @@ process fastqc {
 }
 
 process denovo_stacks {
-    publishDir "${params.outdir}/denovo_stacks", mode: 'copy'
-
+    name = "denovo_stacks_m${params.small_m}_n${params.small_n}_M${params.big_m}"
+    tag "$name"
+    publishDir "${params.outdir}/denovo_stacks", mode: 'copy',
+      saveAs: {filename ->
+        if(filename.indexOf('popmap.txt') == -1) "${name}/${filename}"
+        else "${filename}"
+      }
     input:
     file("processed/*") from processed_reads.collect()
-    val names from population_names.collect()
+    val p_names from population_names.collect()
 
     output:
-    file "*.{tsv.gz,tsv,log.tsv,distribs,calls}" denovo_results
-    file "popmap.txt"
+    file "*.*" into denovo_results
 
     script:
     p_string = ""
-    names.each {p_string = p_string + "$it\t1\n"}
+    p_names.each {p_string = p_string + "$it\t1\n"}
     """
     printf "${p_string}" > popmap.txt
     denovo_map.pl --samples processed/ --popmap popmap.txt -o . -m ${params.small_m} -M ${params.big_m} -n ${params.small_n} -T ${task.cpus}
