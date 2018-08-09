@@ -36,7 +36,7 @@ This pipeline itself needs no installation - NextFlow will automatically fetch i
 If you need to run the pipeline on a system with no internet connection, you will need to download the files yourself from GitHub and run them directly:
 
 ```bash
-wget https://github.com/remiolsen/nf-core-radseq/archive/master.zip
+wget https://github.com/nf-core/radseq/archive/master.zip
 unzip master.zip -d /my-pipelines/
 cd /my_data/
 nextflow run /my-pipelines/nf-core-radseq-master

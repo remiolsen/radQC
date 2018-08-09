@@ -1,12 +1,12 @@
-name: nf-core-radseq-0.1.0
+name: nfcore-radseq-0.1.1dev
 channels:
   - bioconda
   - conda-forge
   - defaults
 dependencies:
-  - conda-forge::r-base
-  - conda-forge::r-markdown
+  - conda-forge::r-base=3.5.1
+  - conda-forge::r-markdown=0.8
   - bioconda::fastqc=0.11.7
-  - bioconda::multiqc=1.5
+  - bioconda::multiqc=1.6
   - bioconda::stacks=2.1
   - bioconda::trimmomatic=0.38

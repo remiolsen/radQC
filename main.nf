@@ -5,7 +5,7 @@
 ========================================================================================
  nf-core/radseq Analysis Pipeline. Started 2018-08-06.
  #### Homepage / Documentation
- https://github.com/remiolsen/nf-core-radseq
+ https://github.com/nf-core/radseq
  #### Authors
  Remi-Andre Olsen remiolsen <remi-andre.olsen@scilifelab.se> - https://github.com/remiolsen>
 ----------------------------------------------------------------------------------------

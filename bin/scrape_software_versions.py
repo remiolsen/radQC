@@ -31,7 +31,7 @@ for k, v in regexes.items():
 print ('''
 id: 'nf-core/radseq-software-versions'
 section_name: 'nf-core/radseq Software Versions'
-section_href: 'https://github.com/remiolsen/nf-core-radseq'
+section_href: 'https://github.com/nf-core/radseq'
 plot_type: 'html'
 description: 'are collected at run time from the software output.'
 data: |

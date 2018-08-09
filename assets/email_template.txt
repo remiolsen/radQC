@@ -48,4 +48,4 @@ Pipeline Configuration:
 
 --
 nf-core/radseq
-https://github.com/remiolsen/nf-core-radseq
+https://github.com/nf-core/radseq
