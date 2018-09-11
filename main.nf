@@ -286,7 +286,7 @@ process denovo_stacks {
 
     script:
     p_string = ""
-    p_names.each {p_string = p_string + "$it\t1\n"}
+    p_names.each {p_string = p_string + "$it\tnfcore_radseq\n"}
     """
     printf "${p_string}" > popmap.txt
     denovo_map.pl --samples processed/ --popmap popmap.txt -o . -m ${params.small_m} -M ${params.big_m} -n ${params.small_n} -T ${task.cpus}
