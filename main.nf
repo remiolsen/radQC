@@ -26,19 +26,26 @@ def helpMessage() {
     Mandatory arguments:
       --reads                       Path to input data (must be surrounded with quotes)
       --enzyme                      [Stacks] Which restriction enzyme to use
-
       -profile                      Configuration profile to use. docker / awsbatch
 
     Options:
       --singleEnd                   Specifies that the input is single end reads
-
-    References                      If not specified in the configuration file or you wish to overwrite any of the references.
-      --fasta                       Path to Fasta reference
+      --trim_adapters               Do read-trimming [true/false]
+      --trim_truncate               Truncate reads reads after trimming to a fixed length. Minimum 30. [100]
+      --best_practice               Run denovo stacks with 3 sets of parameters
       --small_m                     [Stacks] parameter
       --small_n                     [Stacks] parameter
       --big_m                       [Stacks] parameter
-      --trim_adapters               Do read-trimming [true/false]
-      --trim_truncate               Truncate reads reads after trimming to a fixed length. Minimum 30. [100]
+      --genepop                     [Stacks] output [default=true]
+      --structure                   [Stacks] output [default=true]
+      --plink                       [Stacks] output [default=true]
+      --vcf                         [Stacks] output
+      --phylip                      [Stacks] output
+      --radpainter                  [Stacks] output
+      --fasta_out                   [Stacks] output
+
+    References                      If not specified in the configuration file or you wish to overwrite any of the references.
+      --fasta                       Path to Fasta reference
 
     Other options:
       --outdir                      The output directory where the results will be saved
@@ -196,7 +203,6 @@ process get_software_versions {
 }
 
 
-
 process trimmomatic {
     tag "$name"
     publishDir "${params.outdir}/trimmed_reads", mode: 'copy'
@@ -222,7 +228,6 @@ process trimmomatic {
     ILLUMINACLIP:${params.trim_adapters}:2:30:10 LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 \
     ${trunc_string} 2> ${name}_trim.out
     """
-
 }
 
 
@@ -240,7 +245,7 @@ process process_radtags {
     output:
     file "*process_radtags.log"
     file "*.fq.gz" into processed_reads, read_files_fastqc
-    val name  into population_names, fastqc_names
+    val name into population_names, fastqc_names
 
     script:
     """
@@ -269,29 +274,46 @@ process fastqc {
     """
 }
 
+
+if (params.best_practice) {
+    run_params = [[3,2,1],[6,2,1],[3,5,4]]
+}
+else {
+    run_params = [[params.small_m,params.big_m,params.small_n]]
+}
+
 process denovo_stacks {
-    name = "denovo_stacks_m${params.small_m}_n${params.small_n}_M${params.big_m}"
-    tag "$name"
-    publishDir "${params.outdir}/denovo_stacks", mode: 'copy',
-      saveAs: {filename ->
-        if(filename.indexOf('popmap.txt') == -1) "${name}/${filename}"
-        else "${filename}"
-      }
+    tag "denovo_stacks_m${run[0]}_M${run[1]}_n${run[2]}"
+    publishDir "${params.outdir}/denovo_stacks", mode: 'copy'
+
     input:
     file("processed/*") from processed_reads.collect()
+    each run from run_params
     val p_names from population_names.collect()
 
     output:
-    file "*.*" into denovo_results
+    set val("$name"), file("${name}/") into denovo_results1, denovo_results2
+    file "popmap.txt"
 
     script:
+    small_m = run[0]; big_m = run[1]; small_n = run[2]
+    name = "denovo_stacks_m${run[0]}_M${run[1]}_n${run[2]}"
     p_string = ""
     p_names.each {p_string = p_string + "$it\tnfcore_radseq\n"}
+    outputs = params.genepop ? "--genepop ":""
+    outputs += params.structure ? "--structure ":""
+    outputs += params.plink ? "--plink ":""
+    outputs += params.phylip ? "--phylip ":""
+    outputs += params.vcf ? "--vcf --vcf_haplotypes ":""
+    outputs += params.radpainter ? "--radpainter ":""
+    outputs += params.fasta_out ? "--fasta_loci --fasta_samples ":""
     """
     printf "${p_string}" > popmap.txt
-    denovo_map.pl --samples processed/ --popmap popmap.txt -o . -m ${params.small_m} -M ${params.big_m} -n ${params.small_n} -T ${task.cpus}
+    mkdir ${name}
+    denovo_map.pl --samples processed/ --popmap popmap.txt -o ${name} -m ${small_m} -M ${big_m} -n ${small_n} -T ${task.cpus} -X "populations: ${outputs}"
     """
 }
+
 
 process multiqc {
     publishDir "${params.outdir}/MultiQC", mode: 'copy'
