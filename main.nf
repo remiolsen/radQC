@@ -297,7 +297,7 @@ process denovo_stacks {
 
     script:
     small_m = run[0]; big_m = run[1]; small_n = run[2]
-    name = "denovo_stacks_m${run[0]}_M${run[1]}_n${run[2]}"
+    name = "denovo_stacks_m${small_m}_M${big_m}_n${small_n}"
     p_string = ""
     p_names.each {p_string = p_string + "$it\tnfcore_radseq\n"}
     outputs = params.genepop ? "--genepop ":""
