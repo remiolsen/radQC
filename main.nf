@@ -249,7 +249,7 @@ process process_radtags {
 
     script:
     """
-    process_radtags -i gzfastq -1 ${reads[0]} -2 ${reads[1]} -e ${params.enzyme} -r -o .
+    process_radtags -i gzfastq -1 ${reads[0]} -2 ${reads[1]} -e ${params.enzyme} -r -o -c .
     rm *.rem.*.fq.gz
     mv *.1.fq.gz ${name}.1.fq.gz
     mv *.2.fq.gz ${name}.2.fq.gz
