@@ -4,4 +4,4 @@ LABEL authors="remi-andre.olsen@scilifelab.se" \
     description="Docker image containing all requirements for nf-core/radseq pipeline"
 
 COPY environment.yml /
-RUN conda env update -n root -f /environment.yml && conda clean -a
+RUN conda env create -f /environment.yml && conda clean -a
