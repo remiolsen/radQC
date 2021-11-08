@@ -32,6 +32,7 @@ def helpMessage() {
       --singleEnd                   Specifies that the input is single end reads
       --trim_adapters               Do read-trimming [true/false]
       --trim_truncate               Truncate reads reads after trimming to a fixed length. Minimum 30. [100]
+      --trim_head                   Trim a fixed no. bases from beginning of reads [0]
       --best_practice               Run denovo stacks with 3 sets of parameters
       --small_m                     [Stacks] parameter
       --small_n                     [Stacks] parameter
@@ -215,9 +216,13 @@ process trimmomatic {
     file "*_trim.out" into trim_logs
 
     script:
+    head_string = ""
     trunc_string = "MINLEN:30 CROP:30"
     if(params.trim_truncate > 30){
       trunc_string = "MINLEN:${params.trim_truncate} CROP:${params.trim_truncate}"
+    }
+    if(params.trim_head > 0){
+      head_string = "HEADCROP:${params.trim_head}"
     }
     """
     trimmomatic PE \
@@ -225,7 +230,7 @@ process trimmomatic {
     -trimlog ${name}_trim.log \
     -phred33 \
     ${reads} trim_${reads[0]} U_${reads[0]} trim_${reads[1]} U_${reads[1]} \
-    ILLUMINACLIP:${params.trim_adapters}:2:30:10 LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 \
+    ${head_string} ILLUMINACLIP:${params.trim_adapters}:2:30:10 LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 \
     ${trunc_string} 2> ${name}_trim.out
     """
 }
