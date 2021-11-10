@@ -11,7 +11,7 @@ https://img.shields.io/badge/singularity-available-7E4C74.svg)
 
 ## ⚠️ Important note
 
-This project is abandoned. It will never be part of nf-core and the code might not ever be updated again.
+This project is abandoned. It will never be part of nf-core and the code might not ever be updated again. The current code is not complying with current nf-core standards. As such, don't expect any convenience functions. Use this at your own risk!
 
 ### Introduction
 nf-core/radseq: Pipeline for QC of RAD-seq data
