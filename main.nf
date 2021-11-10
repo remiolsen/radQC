@@ -297,7 +297,7 @@ process denovo_stacks {
     val p_names from population_names.collect()
 
     output:
-    set val("$name"), file("${name}/") into denovo_results1, denovo_results2
+    set val("$name"), file("${name}/") into denovo_results
     file "popmap.txt"
 
     script:
@@ -327,6 +327,7 @@ process multiqc {
     file multiqc_config
     file ('fastqc/*') from fastqc_results.collect()
     file ('trimmomatic/*') from trim_logs.collect()
+    file ('denovo_stacks/*') from denovo_results.collect()
     file ('software_versions/*') from software_versions_yaml
 
     output:
