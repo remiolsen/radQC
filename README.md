@@ -9,6 +9,10 @@ Pipeline for QC of RAD-seq data
 ![Singularity Container available](
 https://img.shields.io/badge/singularity-available-7E4C74.svg)
 
+## ⚠️ Important note
+
+This project is abandoned. It will never be part of nf-core and the code might not ever be updated again.
+
 ### Introduction
 nf-core/radseq: Pipeline for QC of RAD-seq data
 
