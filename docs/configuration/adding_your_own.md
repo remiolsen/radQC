@@ -1,4 +1,4 @@
-# nf-core/radseq: Configuration for other clusters
+# radseqQC: Configuration for other clusters
 
 It is entirely possible to run this pipeline on other clusters, though you will need to set up your own config file so that the pipeline knows how to work with your cluster.
 
@@ -35,7 +35,7 @@ process {
 To run the pipeline, several software packages are required. How you satisfy these requirements is essentially up to you and depends on your system. If possible, we _highly_ recommend using either Docker or Singularity.
 
 ### Docker
-Docker is a great way to run nf-core/radseq, as it manages all software installations and allows the pipeline to be run in an identical software environment across a range of systems.
+Docker is a great way to run radseqQC, as it manages all software installations and allows the pipeline to be run in an identical software environment across a range of systems.
 
 Nextflow has [excellent integration](https://www.nextflow.io/docs/latest/docker.html) with Docker, and beyond installing the two tools, not much else is required.
 
@@ -63,7 +63,7 @@ process {
 
 The variable `wf_container` is defined dynamically and automatically specifies the image tag if Nextflow is running with `-r`.
 
-A test suite for docker comes with the pipeline, and can be run by moving to the [`tests` directory](https://github.com/nf-core/radseq/tree/master/tests) and running `./run_test.sh`. This will download a small yeast genome and some data, and attempt to run the pipeline through docker on that small dataset. This is automatically run using [Travis](https://travis-ci.org/remiolsen/nf-core-radseq/) whenever changes are made to the pipeline.
+A test suite for docker comes with the pipeline, and can be run by moving to the [`tests` directory](https://github.com/radseqQC/tree/master/tests) and running `./run_test.sh`. This will download a small yeast genome and some data, and attempt to run the pipeline through docker on that small dataset. This is automatically run using [Travis](https://travis-ci.org/remiolsen/nf-core-radseq/) whenever changes are made to the pipeline.
 
 ### Singularity image
 Many HPC environments are not able to run Docker due to security issues. [Singularity](http://singularity.lbl.gov/) is a tool designed to run on such HPC systems which is very similar to Docker. Even better, it can use create images directly from dockerhub.

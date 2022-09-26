@@ -1,6 +1,6 @@
-# nf-core/radseq Documentation
+# radseqQC Documentation
 
-The nf-core/radseq documentation is split into the following files:
+The radseqQC documentation is split into the following files:
 
 1. [Installation](installation.md)
 2. Pipeline configuration

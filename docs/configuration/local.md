@@ -1,11 +1,11 @@
-# nf-core/radseq: Local Configuration
+# radseqQC: Local Configuration
 
 If running the pipeline in a local environment, we highly recommend using either Docker or Singularity.
 
 ## Docker
-Docker is a great way to run nf-core/radseq, as it manages all software installations and allows the pipeline to be run in an identical software environment across a range of systems.
+Docker is a great way to run radseqQC, as it manages all software installations and allows the pipeline to be run in an identical software environment across a range of systems.
 
-Nextflow has [excellent integration](https://www.nextflow.io/docs/latest/docker.html) with Docker, and beyond installing the two tools, not much else is required. The nf-core/radseq profile comes with a configuration profile for docker, making it very easy to use. This also comes with the required presets to use the AWS iGenomes resource, meaning that if using common reference genomes you just specify the reference ID and it will be autaomtically downloaded from AWS S3.
+Nextflow has [excellent integration](https://www.nextflow.io/docs/latest/docker.html) with Docker, and beyond installing the two tools, not much else is required. The radseqQC profile comes with a configuration profile for docker, making it very easy to use. This also comes with the required presets to use the AWS iGenomes resource, meaning that if using common reference genomes you just specify the reference ID and it will be autaomtically downloaded from AWS S3.
 
 First, install docker on your system: [Docker Installation Instructions](https://docs.docker.com/engine/installation/)
 
@@ -38,5 +38,5 @@ singularity pull --name nf-core-radseq.img docker://remiolsen/nf-core-radseq
 Then transfer this file and run the pipeline with this path:
 
 ```bash
-nextflow run /path/to/nf-core/radseq -with-singularity /path/to/nf-core-radseq.img
+nextflow run /path/to/radseqQC -with-singularity /path/to/nf-core-radseq.img
 ```

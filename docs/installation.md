@@ -1,6 +1,6 @@
-# nf-core/radseq Installation
+# radseqQC Installation
 
-To start using the nf-core/radseq pipeline, there are three steps described below:
+To start using the radseqQC pipeline, there are three steps described below:
 
 1. [Install Nextflow](#install-nextflow)
 2. [Install the pipeline](#install-the-pipeline)
@@ -36,7 +36,7 @@ This pipeline itself needs no installation - NextFlow will automatically fetch i
 If you need to run the pipeline on a system with no internet connection, you will need to download the files yourself from GitHub and run them directly:
 
 ```bash
-wget https://github.com/nf-core/radseq/archive/master.zip
+wget https://github.com/radseqQC/archive/master.zip
 unzip master.zip -d /my-pipelines/
 cd /my_data/
 nextflow run /my-pipelines/nf-core-radseq-master

@@ -3,7 +3,7 @@ Bootstrap:docker
 
 %labels
     MAINTAINER Remi-Andre Olsen <remi-andre.olsen@scilifelab.se>
-    DESCRIPTION Singularity image containing all requirements for nf-core/radseq pipeline
+    DESCRIPTION Singularity image containing all requirements for radseqQC pipeline
     VERSION 0.1.1dev
 
 %files

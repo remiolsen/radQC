@@ -1,11 +1,11 @@
 #!/usr/bin/env nextflow
 /*
 ========================================================================================
-                         nf-core/radseq
+                         radseqQC
 ========================================================================================
- nf-core/radseq Analysis Pipeline. Started 2018-08-06.
+ radseqQC Analysis Pipeline. Started 2018-08-06.
  #### Homepage / Documentation
- https://github.com/nf-core/radseq
+ https://github.com/radseqQC
  #### Authors
  Remi-Andre Olsen remiolsen <remi-andre.olsen@scilifelab.se> - https://github.com/remiolsen>
 ----------------------------------------------------------------------------------------
@@ -15,7 +15,7 @@
 def helpMessage() {
     log.info"""
     =========================================
-     nf-core/radseq v${params.version}
+     radseqQC v${params.version}
     =========================================
     Usage:
 
@@ -134,10 +134,10 @@ log.info """=======================================================
     | \\| |       \\__, \\__/ |  \\ |___     \\`-._,-`-,
                                           `._,._,\'
 
-nf-core/radseq v${params.version}"
+radseqQC v${params.version}"
 ======================================================="""
 def summary = [:]
-summary['Pipeline Name']  = 'nf-core/radseq'
+summary['Pipeline Name']  = 'radseqQC'
 summary['Pipeline Version'] = params.version
 summary['Run Name']     = custom_runName ?: workflow.runName
 summary['Reads']        = params.reads
@@ -370,9 +370,9 @@ process output_documentation {
 workflow.onComplete {
 
     // Set up the e-mail variables
-    def subject = "[nf-core/radseq] Successful: $workflow.runName"
+    def subject = "[radseqQC] Successful: $workflow.runName"
     if(!workflow.success){
-      subject = "[nf-core/radseq] FAILED: $workflow.runName"
+      subject = "[radseqQC] FAILED: $workflow.runName"
     }
     def email_fields = [:]
     email_fields['version'] = params.version
@@ -420,11 +420,11 @@ workflow.onComplete {
           if( params.plaintext_email ){ throw GroovyException('Send plaintext e-mail, not HTML') }
           // Try to send HTML e-mail using sendmail
           [ 'sendmail', '-t' ].execute() << sendmail_html
-          log.info "[nf-core/radseq] Sent summary e-mail to $params.email (sendmail)"
+          log.info "[radseqQC] Sent summary e-mail to $params.email (sendmail)"
         } catch (all) {
           // Catch failures and try with plaintext
           [ 'mail', '-s', subject, params.email ].execute() << email_txt
-          log.info "[nf-core/radseq] Sent summary e-mail to $params.email (mail)"
+          log.info "[radseqQC] Sent summary e-mail to $params.email (mail)"
         }
     }
 
@@ -438,6 +438,6 @@ workflow.onComplete {
     def output_tf = new File( output_d, "pipeline_report.txt" )
     output_tf.withWriter { w -> w << email_txt }
 
-    log.info "[nf-core/radseq] Pipeline Complete"
+    log.info "[radseqQC] Pipeline Complete"
 
 }
