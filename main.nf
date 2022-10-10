@@ -1,443 +1,53 @@
 #!/usr/bin/env nextflow
 /*
-========================================================================================
-                         radseqQC
-========================================================================================
- radseqQC Analysis Pipeline. Started 2018-08-06.
- #### Homepage / Documentation
- https://github.com/radseqQC
- #### Authors
- Remi-Andre Olsen remiolsen <remi-andre.olsen@scilifelab.se> - https://github.com/remiolsen>
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    remiolsen/radqc
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    Github : https://github.com/remiolsen/radqc
 ----------------------------------------------------------------------------------------
 */
 
-
-def helpMessage() {
-    log.info"""
-    =========================================
-     radseqQC v${params.version}
-    =========================================
-    Usage:
-
-    The typical command for running the pipeline is as follows:
-
-    nextflow run remiolsen/nf-core-radseq --reads '*_R{1,2}.fastq.gz' -profile docker
-
-    Mandatory arguments:
-      --reads                       Path to input data (must be surrounded with quotes)
-      --enzyme                      [Stacks] Which restriction enzyme to use
-      -profile                      Configuration profile to use. docker / awsbatch
-
-    Options:
-      --singleEnd                   Specifies that the input is single end reads
-      --trim_adapters               Do read-trimming [true/false]
-      --trim_truncate               Truncate reads reads after trimming to a fixed length. Minimum 30. [100]
-      --trim_head                   Trim a fixed no. bases from beginning of reads [0]
-      --best_practice               Run denovo stacks with 3 sets of parameters
-      --small_m                     [Stacks] parameter
-      --small_n                     [Stacks] parameter
-      --big_m                       [Stacks] parameter
-      --genepop                     [Stacks] output [default=true]
-      --structure                   [Stacks] output [default=true]
-      --plink                       [Stacks] output [default=true]
-      --vcf                         [Stacks] output
-      --phylip                      [Stacks] output
-      --radpainter                  [Stacks] output
-      --fasta_out                   [Stacks] output
-
-    References                      If not specified in the configuration file or you wish to overwrite any of the references.
-      --fasta                       Path to Fasta reference
-
-    Other options:
-      --outdir                      The output directory where the results will be saved
-      --email                       Set this parameter to your e-mail address to get a summary e-mail with details of the run sent to you when the workflow exits
-      -name                         Name for the pipeline run. If not specified, Nextflow will automatically generate a random mnemonic.
-    """.stripIndent()
-}
+nextflow.enable.dsl = 2
 
 /*
- * SET UP CONFIGURATION VARIABLES
- */
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    VALIDATE & PRINT PARAMETER SUMMARY
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*/
 
-// Show help emssage
-if (params.help){
-    helpMessage()
-    exit 0
-}
+WorkflowMain.initialise(workflow, params, log)
 
-// Configurable variables
-params.name = false
-params.fasta = params.genome ? params.genomes[ params.genome ].fasta ?: false : false
-params.multiqc_config = "$baseDir/conf/multiqc_config.yaml"
-params.email = false
-params.plaintext_email = false
+/*
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    NAMED WORKFLOW FOR PIPELINE
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*/
 
-multiqc_config = file(params.multiqc_config)
-output_docs = file("$baseDir/docs/output.md")
+include { RADQC } from './workflows/radqc'
 
-// Validate inputs
-if ( params.fasta ){
-    fasta = file(params.fasta)
-    if( !fasta.exists() ) exit 1, "Fasta file not found: ${params.fasta}"
-}
 //
-// NOTE - THIS IS NOT USED IN THIS PIPELINE, EXAMPLE ONLY
-// If you want to use the above in a process, define the following:
-//   input:
-//   file fasta from fasta
+// WORKFLOW: Run main remiolsen/radqc analysis pipeline
 //
-
-
-// Has the run name been specified by the user?
-//  this has the bonus effect of catching both -name and --name
-custom_runName = params.name
-if( !(workflow.runName ==~ /[a-z]+_[a-z]+/) ){
-  custom_runName = workflow.runName
-}
-
-//Check workDir/outdir paths to be S3 buckets if running on AWSBatch
-//related: https://github.com/nextflow-io/nextflow/issues/813
-if( workflow.profile == 'awsbatch') {
-    if(!workflow.workDir.startsWith('s3:') || !params.outdir.startsWith('s3:')) exit 1, "Workdir or Outdir not on S3 - specify S3 Buckets for each to run on AWSBatch!"
+workflow REMIOLSEN_RADQC {
+    RADQC ()
 }
 
 /*
- * Create a channel for input read files
- */
- if(params.readPaths){
-     if(params.singleEnd){
-         Channel
-             .from(params.readPaths)
-             .map { row -> [ row[0], [file(row[1][0])]] }
-             .ifEmpty { exit 1, "params.readPaths was empty - no input files supplied" }
-             .into { read_files_trim }
-     } else {
-         Channel
-             .from(params.readPaths)
-             .map { row -> [ row[0], [file(row[1][0]), file(row[1][1])]] }
-             .ifEmpty { exit 1, "params.readPaths was empty - no input files supplied" }
-             .into { read_files_trim }
-     }
- } else {
-     Channel
-         .fromFilePairs( params.reads, size: params.singleEnd ? 1 : 2 )
-         .ifEmpty { exit 1, "Cannot find any reads matching: ${params.reads}\nNB: Path needs to be enclosed in quotes!\nIf this is single-end data, please specify --singleEnd on the command line." }
-         .into { read_files_trim }
- }
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    RUN ALL WORKFLOWS
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*/
 
-
-// Header log info
-log.info """=======================================================
-                                          ,--./,-.
-          ___     __   __   __   ___     /,-._.--~\'
-    |\\ | |__  __ /  ` /  \\ |__) |__         }  {
-    | \\| |       \\__, \\__/ |  \\ |___     \\`-._,-`-,
-                                          `._,._,\'
-
-radseqQC v${params.version}"
-======================================================="""
-def summary = [:]
-summary['Pipeline Name']  = 'radseqQC'
-summary['Pipeline Version'] = params.version
-summary['Run Name']     = custom_runName ?: workflow.runName
-summary['Reads']        = params.reads
-summary['Fasta Ref']    = params.fasta
-summary['Data Type']    = params.singleEnd ? 'Single-End' : 'Paired-End'
-summary['Max Memory']   = params.max_memory
-summary['Max CPUs']     = params.max_cpus
-summary['Max Time']     = params.max_time
-summary['Output dir']   = params.outdir
-summary['Working dir']  = workflow.workDir
-summary['Container Engine'] = workflow.containerEngine
-if(workflow.containerEngine) summary['Container'] = workflow.container
-summary['Current home']   = "$HOME"
-summary['Current user']   = "$USER"
-summary['Current path']   = "$PWD"
-summary['Working dir']    = workflow.workDir
-summary['Output dir']     = params.outdir
-summary['Script dir']     = workflow.projectDir
-summary['Config Profile'] = workflow.profile
-if(workflow.profile == 'awsbatch'){
-   summary['AWS Region'] = params.awsregion
-   summary['AWS Queue'] = params.awsqueue
+//
+// WORKFLOW: Execute a single named workflow for the pipeline
+// See: https://github.com/nf-core/rnaseq/issues/619
+//
+workflow {
+    REMIOLSEN_RADQC ()
 }
-if(workflow.profile == 'slurm') summary['Cluster Options'] = params.clusterOptions
-if(params.email) summary['E-mail Address'] = params.email
-log.info summary.collect { k,v -> "${k.padRight(15)}: $v" }.join("\n")
-log.info "========================================="
-
-
-// Check that Nextflow version is up to date enough
-// try / throw / catch works for NF versions < 0.25 when this was implemented
-try {
-    if( ! nextflow.version.matches(">= $params.nf_required_version") ){
-        throw GroovyException('Nextflow version too old')
-    }
-} catch (all) {
-    log.error "====================================================\n" +
-              "  Nextflow version $params.nf_required_version required! You are running v$workflow.nextflow.version.\n" +
-              "  Pipeline execution will continue, but things may break.\n" +
-              "  Please run `nextflow self-update` to update Nextflow.\n" +
-              "============================================================"
-}
-
 
 /*
- * Parse software version numbers
- */
-process get_software_versions {
-
-    output:
-    file 'software_versions_mqc.yaml' into software_versions_yaml
-
-    script:
-    """
-    echo $params.version > v_pipeline.txt
-    echo $workflow.nextflow.version > v_nextflow.txt
-    fastqc --version > v_fastqc.txt
-    multiqc --version > v_multiqc.txt
-    trimmomatic -version > v_trimmomatic.txt
-    ustacks -v 2> v_stacks.txt || true
-    scrape_software_versions.py > software_versions_mqc.yaml
-    """
-
-}
-
-
-process trimmomatic {
-    tag "$name"
-    publishDir "${params.outdir}/trimmed_reads", mode: 'copy'
-
-    input:
-    set val(name), file(reads) from read_files_trim
-
-    output:
-    set val(name), file("trim_*.fastq.gz") into trimP_files
-    file "*_trim.out" into trim_logs
-
-    script:
-    head_string = ""
-    trunc_string = "MINLEN:30 CROP:30"
-    if(params.trim_truncate > 30){
-      trunc_string = "MINLEN:${params.trim_truncate} CROP:${params.trim_truncate}"
-    }
-    if(params.trim_head > 0){
-      head_string = "HEADCROP:${params.trim_head}"
-    }
-    """
-    trimmomatic PE \
-    -threads ${task.cpus} \
-    -trimlog ${name}_trim.log \
-    -phred33 \
-    ${reads} trim_${reads[0]} U_${reads[0]} trim_${reads[1]} U_${reads[1]} \
-    ${head_string} ILLUMINACLIP:${params.trim_adapters}:2:30:10 LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 \
-    ${trunc_string} 2> ${name}_trim.out
-    """
-}
-
-
-process process_radtags {
-    tag "$name"
-    publishDir "${params.outdir}/process_radtags", mode: 'copy',
-      saveAs: {filename ->
-        if(filename.indexOf('.log') > 0) "${name}_${filename}"
-        else "${filename}"
-      }
-
-    input:
-    set val(name), file(reads) from trimP_files
-
-    output:
-    file "*process_radtags.log"
-    file "*.fq.gz" into processed_reads, read_files_fastqc
-    val name into population_names, fastqc_names
-
-    script:
-    """
-    process_radtags -i gzfastq -1 ${reads[0]} -2 ${reads[1]} -e ${params.enzyme} -r -c -o .
-    rm *.rem.*.fq.gz
-    mv *.1.fq.gz ${name}.1.fq.gz
-    mv *.2.fq.gz ${name}.2.fq.gz
-    """
-}
-
-process fastqc {
-    tag "$name"
-    publishDir "${params.outdir}/fastqc", mode: 'copy',
-        saveAs: {filename -> filename.indexOf(".zip") > 0 ? "zips/$filename" : "$filename"}
-
-    input:
-    file(reads) from read_files_fastqc
-    val(name) from fastqc_names
-
-    output:
-    file "*_fastqc.{zip,html}" into fastqc_results
-
-    script:
-    """
-    fastqc -q $reads
-    """
-}
-
-
-if (params.best_practice) {
-    run_params = [[3,2,1],[6,2,1],[3,5,4]]
-}
-else {
-    run_params = [[params.small_m,params.big_m,params.small_n]]
-}
-
-process denovo_stacks {
-    tag "denovo_stacks_m${run[0]}_M${run[1]}_n${run[2]}"
-    publishDir "${params.outdir}/denovo_stacks", mode: 'copy'
-
-    input:
-    file("processed/*") from processed_reads.collect()
-    each run from run_params
-    val p_names from population_names.collect()
-
-    output:
-    set val("$name"), file("${name}/") into denovo_results
-    file "popmap.txt"
-
-    script:
-    small_m = run[0]; big_m = run[1]; small_n = run[2]
-    name = "denovo_stacks_m${small_m}_M${big_m}_n${small_n}"
-    p_string = ""
-    p_names.each {p_string = p_string + "$it\tnfcore_radseq\n"}
-    outputs = params.genepop ? "--genepop ":""
-    outputs += params.structure ? "--structure ":""
-    outputs += params.plink ? "--plink ":""
-    outputs += params.phylip ? "--phylip ":""
-    outputs += params.vcf ? "--vcf --vcf_haplotypes ":""
-    outputs += params.radpainter ? "--radpainter ":""
-    outputs += params.fasta_out ? "--fasta_loci --fasta_samples ":""
-    """
-    printf "${p_string}" > popmap.txt
-    mkdir ${name}
-    denovo_map.pl --samples processed/ --popmap popmap.txt -o ${name} -m ${small_m} -M ${big_m} -n ${small_n} -T ${task.cpus} -X "populations: ${outputs}"
-    """
-}
-
-
-process multiqc {
-    publishDir "${params.outdir}/MultiQC", mode: 'copy'
-
-    input:
-    file multiqc_config
-    file ('fastqc/*') from fastqc_results.collect()
-    file ('trimmomatic/*') from trim_logs.collect()
-    file ('denovo_stacks/*') from denovo_results.collect()
-    file ('software_versions/*') from software_versions_yaml
-
-    output:
-    file "*multiqc_report.html" into multiqc_report
-    file "*_data"
-
-    script:
-    rtitle = custom_runName ? "--title \"$custom_runName\"" : ''
-    rfilename = custom_runName ? "--filename " + custom_runName.replaceAll('\\W','_').replaceAll('_+','_') + "_multiqc_report" : ''
-    """
-    multiqc -f $rtitle $rfilename --config $multiqc_config .
-    """
-}
-
-
-
-/*
- * STEP 3 - Output Description HTML
- */
-process output_documentation {
-    tag "$prefix"
-    publishDir "${params.outdir}/Documentation", mode: 'copy'
-
-    input:
-    file output_docs
-
-    output:
-    file "results_description.html"
-
-    script:
-    """
-    markdown_to_html.r $output_docs results_description.html
-    """
-}
-
-
-/*
- * Completion e-mail notification
- */
-workflow.onComplete {
-
-    // Set up the e-mail variables
-    def subject = "[radseqQC] Successful: $workflow.runName"
-    if(!workflow.success){
-      subject = "[radseqQC] FAILED: $workflow.runName"
-    }
-    def email_fields = [:]
-    email_fields['version'] = params.version
-    email_fields['runName'] = custom_runName ?: workflow.runName
-    email_fields['success'] = workflow.success
-    email_fields['dateComplete'] = workflow.complete
-    email_fields['duration'] = workflow.duration
-    email_fields['exitStatus'] = workflow.exitStatus
-    email_fields['errorMessage'] = (workflow.errorMessage ?: 'None')
-    email_fields['errorReport'] = (workflow.errorReport ?: 'None')
-    email_fields['commandLine'] = workflow.commandLine
-    email_fields['projectDir'] = workflow.projectDir
-    email_fields['summary'] = summary
-    email_fields['summary']['Date Started'] = workflow.start
-    email_fields['summary']['Date Completed'] = workflow.complete
-    email_fields['summary']['Pipeline script file path'] = workflow.scriptFile
-    email_fields['summary']['Pipeline script hash ID'] = workflow.scriptId
-    if(workflow.repository) email_fields['summary']['Pipeline repository Git URL'] = workflow.repository
-    if(workflow.commitId) email_fields['summary']['Pipeline repository Git Commit'] = workflow.commitId
-    if(workflow.revision) email_fields['summary']['Pipeline Git branch/tag'] = workflow.revision
-    email_fields['summary']['Nextflow Version'] = workflow.nextflow.version
-    email_fields['summary']['Nextflow Build'] = workflow.nextflow.build
-    email_fields['summary']['Nextflow Compile Timestamp'] = workflow.nextflow.timestamp
-
-    // Render the TXT template
-    def engine = new groovy.text.GStringTemplateEngine()
-    def tf = new File("$baseDir/assets/email_template.txt")
-    def txt_template = engine.createTemplate(tf).make(email_fields)
-    def email_txt = txt_template.toString()
-
-    // Render the HTML template
-    def hf = new File("$baseDir/assets/email_template.html")
-    def html_template = engine.createTemplate(hf).make(email_fields)
-    def email_html = html_template.toString()
-
-    // Render the sendmail template
-    def smail_fields = [ email: params.email, subject: subject, email_txt: email_txt, email_html: email_html, baseDir: "$baseDir" ]
-    def sf = new File("$baseDir/assets/sendmail_template.txt")
-    def sendmail_template = engine.createTemplate(sf).make(smail_fields)
-    def sendmail_html = sendmail_template.toString()
-
-    // Send the HTML e-mail
-    if (params.email) {
-        try {
-          if( params.plaintext_email ){ throw GroovyException('Send plaintext e-mail, not HTML') }
-          // Try to send HTML e-mail using sendmail
-          [ 'sendmail', '-t' ].execute() << sendmail_html
-          log.info "[radseqQC] Sent summary e-mail to $params.email (sendmail)"
-        } catch (all) {
-          // Catch failures and try with plaintext
-          [ 'mail', '-s', subject, params.email ].execute() << email_txt
-          log.info "[radseqQC] Sent summary e-mail to $params.email (mail)"
-        }
-    }
-
-    // Write summary e-mail HTML to a file
-    def output_d = new File( "${params.outdir}/Documentation/" )
-    if( !output_d.exists() ) {
-      output_d.mkdirs()
-    }
-    def output_hf = new File( output_d, "pipeline_report.html" )
-    output_hf.withWriter { w -> w << email_html }
-    def output_tf = new File( output_d, "pipeline_report.txt" )
-    output_tf.withWriter { w -> w << email_txt }
-
-    log.info "[radseqQC] Pipeline Complete"
-
-}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    THE END
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*/

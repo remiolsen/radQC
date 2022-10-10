@@ -1,0 +1,27 @@
+{
+    "name": "remiolsen/radqc",
+    "homePage": "https://github.com/remiolsen/radqc",
+    "repos": {
+        "nf-core/modules": {
+            "git_url": "https://github.com/nf-core/modules.git",
+            "modules": {
+                "custom/dumpsoftwareversions": {
+                    "branch": "master",
+                    "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
+                },
+                "fastqc": {
+                    "branch": "master",
+                    "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
+                },
+                "multiqc": {
+                    "branch": "master",
+                    "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
+                },
+                "trimmomatic": {
+                    "branch": "master",
+                    "git_sha": "c1eb9cce44e0b5cdab6672ebfa2f8e8842d2aa86"
+                }
+            }
+        }
+    }
+}
