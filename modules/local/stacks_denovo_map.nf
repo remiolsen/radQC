@@ -11,7 +11,7 @@ process STACKS_DENOVO_MAP {
     path(samples)
 
     output:
-    path "*.log", emit: denovo_logs
+    path "{populations.sumstats_summary.tsv,*.log.distribs}", emit: denovo_logs
     path "*.*", emit: denovo_outputs
     path "versions.yml", emit: versions
 
