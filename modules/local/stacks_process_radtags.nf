@@ -28,8 +28,8 @@ process STACKS_PROCESS_RADTAGS {
     --threads ${task.cpus} \\
     -o . -r -c
 
-    mv *.rem.1.fq.gz ${prefix}.rem1.fq.gz
-    mv *.rem.2.fq.gz ${prefix}.rem2.fq.gz 
+    mv *_1.rem.1.fq.gz ${prefix}.rem1.fq.gz
+    mv *_2.rem.2.fq.gz ${prefix}.rem2.fq.gz
     mv *_1.1.fq.gz ${prefix}.1.fq.gz
     mv *_2.2.fq.gz ${prefix}.2.fq.gz
 
