@@ -1,105 +1,95 @@
 {
-    "$schema": "http://json-schema.org/draft-07/schema",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": "https://raw.githubusercontent.com/remiolsen/radqc/master/nextflow_schema.json",
     "title": "remiolsen/radqc pipeline parameters",
     "description": "Pipeline for QC of RAD-seq data",
     "type": "object",
-    "definitions": {
+    "$defs": {
         "pipeline_options": {
             "title": "Pipeline options",
             "type": "object",
             "fa_icon": "fas fa-terminal",
             "description": "Parameters inputted to the various processes in the pipeline",
-            "required": [
-                "enzyme",
-                "small_m",
-                "large_m",
-                "small_m"
-            ],
+            "required": ["enzyme","small_m","large_m","small_n"],
             "properties": {
                 "trim_adapters": {
-                    "type": "boolean",
-                    "default": true,
-                    "description": "Do read-trimming",
-                    "hidden": true,
+                    "type": "string",
+                    "format": "file-path",
+                    "default": "${baseDir}/assets/adapters.fa",
+                    "description": "Adaptors to use for trimming",
+                    "hidden": true
                 },
                 "trim_truncate": {
                     "type": "integer",
                     "default": 125,
-                    "description": "Truncate reads reads after trimming to a fixed length. Minimum 30.",
+                    "description": "Truncate reads reads after trimming to a fixed length. Minimum 30."
                 },
                 "trim_head": {
                     "type": "integer",
                     "default": 0,
-                    "description": "Trim a fixed no. bases from beginning of reads",
+                    "description": "Trim a fixed no. bases from beginning of reads"
                 },
                 "enzyme": {
                     "type": "string",
-                    "description": "[Stacks] Which restriction enzyme to use from the list Stacks supports, e.g. 'ecoRI'",
+                    "description": "[Stacks] Which restriction enzyme to use from the list Stacks supports, e.g. 'ecoRI'"
                 },
                 "best_practice": {
                     "type": "boolean",
-                    "default": false,
-                    "description": "[Stacks] Run denovo stacks with 3 sets of parameters",
+                    "description": "[Stacks] Run denovo stacks with 3 sets of parameters"
                 },
                 "small_m": {
                     "type": "integer",
                     "default": 3,
-                    "description": "[Stacks] parameter",
+                    "description": "[Stacks] parameter"
                 },
                 "small_n": {
                     "type": "integer",
                     "default": 1,
-                    "description": "[Stacks] parameter",
+                    "description": "[Stacks] parameter"
                 },
                 "big_m": {
                     "type": "integer",
                     "default": 2,
-                    "description": "[Stacks] parameter",
+                    "description": "[Stacks] parameter"
                 },
                 "genepop": {
                     "type": "boolean",
-                    "default": false,
                     "description": "[Stacks] parameter",
-                    "hidden": true,
+                    "hidden": true
                 },
                 "structure": {
                     "type": "boolean",
-                    "default": false,
                     "description": "[Stacks] parameter",
-                    "hidden": true,
+                    "hidden": true
                 },
                 "plink": {
                     "type": "boolean",
-                    "default": false,
                     "description": "[Stacks] parameter",
-                    "hidden": true,
+                    "hidden": true
                 },
                 "vcf": {
                     "type": "boolean",
                     "default": true,
                     "description": "[Stacks] parameter",
-                    "hidden": true,
+                    "hidden": true
                 },
                 "phylip": {
                     "type": "boolean",
-                    "default": false,
                     "description": "[Stacks] parameter",
-                    "hidden": true,
+                    "hidden": true
                 },
                 "radpainter": {
                     "type": "boolean",
-                    "default": false,
                     "description": "[Stacks] parameter",
-                    "hidden": true,
+                    "hidden": true
                 },
                 "fasta_out": {
                     "type": "boolean",
                     "default": true,
                     "description": "[Stacks] parameter",
-                    "hidden": true,
-                },
-            },
+                    "hidden": true
+                }
+            }
         },
         "input_output_options": {
             "title": "Input/output options",
@@ -319,16 +309,19 @@
     },
     "allOf": [
         {
-            "$ref": "#/definitions/input_output_options"
+            "$ref": "#/$defs/pipeline_options"
         },
         {
-            "$ref": "#/definitions/institutional_config_options"
+            "$ref": "#/$defs/input_output_options"
         },
         {
-            "$ref": "#/definitions/max_job_request_options"
+            "$ref": "#/$defs/institutional_config_options"
         },
         {
-            "$ref": "#/definitions/generic_options"
+            "$ref": "#/$defs/max_job_request_options"
+        },
+        {
+            "$ref": "#/$defs/generic_options"
         }
     ]
 }
