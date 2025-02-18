@@ -109,7 +109,6 @@ workflow RADQC {
     ch_multiqc_files = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
     ch_multiqc_files = ch_multiqc_files.mix(CUSTOM_DUMPSOFTWAREVERSIONS.out.mqc_yml.collect())
     ch_multiqc_files = ch_multiqc_files.mix(FASTQC.out.zip.collect{it[1]}.ifEmpty([]))
-    // ch_trimmomatic_multiqc = ch_trimmomatic_multiqc.mix(TRIMMOMATIC.out.log.collect{it[1]}.ifEmpty([]))
     ch_stacks_multiqc = ch_stacks_multiqc.mix(STACKS_DENOVO_MAP.out.denovo_logs.collect{it[1]}.ifEmpty([]))
 
     MULTIQC (

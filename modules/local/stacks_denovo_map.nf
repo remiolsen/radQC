@@ -25,7 +25,7 @@ process STACKS_DENOVO_MAP {
     outputs += params.fasta_out ? "--fasta-loci --fasta-samples ":""
 
     def usamples = []
-    samples.each {usamples += ["${it.simpleName}\tnfcore_radseq\n"]}
+    samples.each {usamples += ["${it.simpleName}\tnradseqQC\n"]}
     usamples = usamples.unique()
     def p_string = ""
     usamples.each {p_string += "${it}"}
