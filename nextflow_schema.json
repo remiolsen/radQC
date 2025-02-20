@@ -1,5 +1,5 @@
 {
-    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$schema": "https://json-schema.org/draft-07/schema",
     "$id": "https://raw.githubusercontent.com/remiolsen/radqc/master/nextflow_schema.json",
     "title": "remiolsen/radqc pipeline parameters",
     "description": "Pipeline for QC of RAD-seq data",
