@@ -1,5 +1,5 @@
 {
-    "$schema": "https://json-schema.org/draft-07/schema",
+    "$schema": "http://json-schema.org/draft-07/schema",
     "$id": "https://raw.githubusercontent.com/remiolsen/radqc/master/nextflow_schema.json",
     "title": "remiolsen/radqc pipeline parameters",
     "description": "Pipeline for QC of RAD-seq data",
@@ -10,7 +10,7 @@
             "type": "object",
             "fa_icon": "fas fa-terminal",
             "description": "Parameters inputted to the various processes in the pipeline",
-            "required": ["enzyme","small_m","large_m","small_n"],
+            "required": ["enzyme","small_m","big_m","small_n"],
             "properties": {
                 "trim_adapters": {
                     "type": "string",
