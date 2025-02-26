@@ -11,7 +11,7 @@ process STACKS_PROCESS_RADTAGS {
     tuple val(meta), path(reads)
 
     output:
-    path "*process_radtags.log", emit: log
+    path "*process_radtags.log", emit: radtag_log
     tuple val(meta), path("*.{1,2}.fq.gz"), emit: processed_reads
     path "versions.yml", emit: versions
 

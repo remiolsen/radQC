@@ -5,30 +5,41 @@
     "https://github.com/nf-core/modules.git": {
       "modules": {
         "nf-core": {
-          "custom/dumpsoftwareversions": {
-            "branch": "master",
-            "git_sha": "82501fe6d0d12614db67751d30af98d16e63dc59",
-            "installed_by": ["modules"]
-          },
           "fastqc": {
             "branch": "master",
-            "git_sha": "49b18b1639f4f7104187058866a8fab33332bdfe",
+            "git_sha": "81880787133db07d9b4c1febd152c090eb8325dc",
             "installed_by": ["modules"]
           },
           "multiqc": {
             "branch": "master",
-            "git_sha": "90aef30f432332bdf0ce9f4b9004aa5d5c4960bb",
+            "git_sha": "81880787133db07d9b4c1febd152c090eb8325dc",
             "installed_by": ["modules"]
           },
           "trimmomatic": {
             "branch": "master",
-            "git_sha": "5e34754d42cd2d5d248ca8673c0a53cdf5624905",
+            "git_sha": "81880787133db07d9b4c1febd152c090eb8325dc",
             "installed_by": ["modules"]
           }
         }
       },
       "subworkflows": {
-        "nf-core": {}
+        "nf-core": {
+          "utils_nextflow_pipeline": {
+            "branch": "master",
+            "git_sha": "c2b22d85f30a706a3073387f30380704fcae013b",
+            "installed_by": ["subworkflows"]
+          },
+          "utils_nfcore_pipeline": {
+            "branch": "master",
+            "git_sha": "51ae5406a030d4da1e49e4dab49756844fdd6c7a",
+            "installed_by": ["subworkflows"]
+          },
+          "utils_nfschema_plugin": {
+            "branch": "master",
+            "git_sha": "2fd2cd6d0e7b273747f32e465fdc6bcc3ae0814e",
+            "installed_by": ["subworkflows"]
+          }
+        }
       }
     }
   }
