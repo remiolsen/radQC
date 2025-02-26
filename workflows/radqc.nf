@@ -47,7 +47,7 @@ workflow RADQC {
     ch_multiqc_files = ch_multiqc_files.mix(FASTQC.out.zip.collect{it[1]})
     ch_multiqc_files = ch_multiqc_files.mix(TRIMMOMATIC.out.out_log.collect{it[1]})
     ch_multiqc_files = ch_multiqc_files.mix(STACKS_PROCESS_RADTAGS.out.radtag_log.collect{it[1]})
-    //ch_multiqc_files = ch_multiqc_files.mix(STACKS_DENOVO_MAP.out.denovo_log.collect{it[1]})
+    ch_multiqc_files = ch_multiqc_files.mix(STACKS_DENOVO_MAP.out.denovo_logs.collect{it[1]})
     ch_versions = ch_versions.mix(FASTQC.out.versions.first())
     ch_versions = ch_versions.mix(TRIMMOMATIC.out.versions.first())
     ch_versions = ch_versions.mix(STACKS_PROCESS_RADTAGS.out.versions.first())
