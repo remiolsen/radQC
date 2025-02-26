@@ -47,6 +47,19 @@ workflow PIPELINE_INITIALISATION {
         workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1
     )
 
+    List enzymes = ['aciI', 'ageI', 'aluI', 'apaLI', 'apeKI', 'apoI', 'aseI', 'bamHI',
+    'bbvCI', 'bfaI', 'bfuCI', 'bgIII', 'bsaHI', 'bspDI', 'bstYI', 'btgI',
+    'cac8I', 'claI', 'csp6I', 'ddeI', 'dpnII', 'eaeI', 'ecoRI', 'ecoRV',
+    'ecoT22I', 'haeIII', 'hhaI', 'hinP1I', 'hindIII', 'hpaII', 'hpyCH4IV', 'kpnI',
+    'mluCI', 'mseI', 'mslI', 'mspI', 'ncoI', 'ndeI', 'ngoMIV', 'nheI',
+    'nlaIII', 'notI', 'nsiI', 'nspI', 'pacI', 'pspXI', 'pstI', 'rsaI',
+    'sacI', 'sau3AI', 'sbfI', 'sexAI', 'sgrAI', 'speI', 'sphI', 'taqI',
+    'xbaI', 'xhoI']
+
+    if (params.enzyme && ! enzymes.any { it.contains(params.enzyme) }) {
+        throw new IllegalArgumentException("${enzyme} is not a valid restriction enzyme, i.e.: ${enzymes}")
+    }
+
     //
     // Validate parameters and generate parameter summary to stdout
     //
