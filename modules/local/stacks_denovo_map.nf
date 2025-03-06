@@ -1,5 +1,5 @@
 process STACKS_DENOVO_MAP {
-
+    tag "$meta.id"
     label 'process_high'
 
     conda     (params.enable_conda ? "bioconda::stacks=2.61" : null)
@@ -8,11 +8,13 @@ process STACKS_DENOVO_MAP {
         'quay.io/biocontainers/stacks:2.61--hd03093a_1' }"
 
     input:
-    path(samples)
+    val meta
+    path samples, stageAs: "processed_reads/*"
 
     output:
-    path "{populations.sumstats_summary.tsv,*.log.distribs}", emit: denovo_logs
-    path "*.*", emit: denovo_outputs
+    tuple val(meta), path("*.log.distribs"), emit: distrib_logs
+    tuple val(meta), path("populations.sumstats_summary.tsv"), emit: sumstats_summary
+    tuple val(meta), path("*.*"), emit: denovo_outputs
     path "versions.yml", emit: versions
 
     script:
@@ -25,14 +27,14 @@ process STACKS_DENOVO_MAP {
     outputs += params.fasta_out ? "--fasta-loci --fasta-samples ":""
 
     def usamples = []
-    samples.each {usamples += ["${it.simpleName}\tnradseqQC\n"]}
+    samples.each {usamples += ["${it.simpleName}\tradseqQC\n"]}
     usamples = usamples.unique()
     def p_string = ""
     usamples.each {p_string += "${it}"}
 
     """
     printf "${p_string}" > popmap.txt
-    denovo_map.pl --samples . \\
+    denovo_map.pl --samples ./processed_reads/ \\
     --popmap popmap.txt \\
     -o . \\
     -m ${params.small_m} \\
