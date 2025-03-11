@@ -3,7 +3,7 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## 0.2.0 - 2024-03-11
+## 0.2.0 - 2025-03-11
 This pipeline is resurrected
 * New nf-core DSL 2 template implemented. 
 * Name has been changed to remove nf-core branding - "radqc"
