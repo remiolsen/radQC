@@ -3,6 +3,7 @@
     IMPORT MODULES / SUBWORKFLOWS / FUNCTIONS
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
+include { CAT_FASTQ                   } from '../modules/nf-core/cat/fastq/main'   
 include { FASTQC                      } from '../modules/nf-core/fastqc/main'
 include { MULTIQC                     } from '../modules/nf-core/multiqc/main'
 include { paramsSummaryMap       } from 'plugin/nf-schema'
@@ -23,14 +24,27 @@ include { STACKS_DENOVO_MAP           } from '../modules/local/stacks_denovo_map
 workflow RADQC {
 
     take:
-    ch_samplesheet // channel: samplesheet read in from --input
+    samplesheet // channel: samplesheet read in from --input
     main:
 
     ch_versions = Channel.empty()
     ch_multiqc_files = Channel.empty()
 
+    ch_samplesheet = samplesheet
+                        .branch { meta, fastqs ->
+                            single  : fastqs.size() == 1
+                                return [ meta, fastqs.flatten() ]
+                            multiple: fastqs.size() > 1
+                                return [ meta, fastqs.flatten() ]
+                        }
+
+    CAT_FASTQ (
+        ch_samplesheet.multiple
+    )
+    ch_fastq = CAT_FASTQ.out.reads.mix(ch_samplesheet.single)
+
     TRIMMOMATIC (
-        ch_samplesheet
+        ch_fastq
     ) 
 
     FASTQC (
