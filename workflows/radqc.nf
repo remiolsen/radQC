@@ -12,8 +12,8 @@ include { paramsSummaryMultiqc   } from '../subworkflows/nf-core/utils_nfcore_pi
 include { softwareVersionsToYAML } from '../subworkflows/nf-core/utils_nfcore_pipeline'
 include { methodsDescriptionText } from '../subworkflows/local/utils_nfcore_radqc_pipeline'
 include { TRIMMOMATIC                 } from '../modules/nf-core/trimmomatic/main'
-include { STACKS_PROCESS_RADTAGS      } from '../modules/local/stacks_process_radtags'
-include { STACKS_DENOVO_MAP           } from '../modules/local/stacks_denovo_map'
+include { STACKS_PROCESS_RADTAGS      } from '../modules/local/stacks/process_radtags/main'
+include { STACKS_DENOVO_MAP           } from '../modules/local/stacks/denovo_map/main'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

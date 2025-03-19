@@ -2,7 +2,7 @@ process STACKS_PROCESS_RADTAGS {
     tag "$meta.id"
     label 'process_medium'
 
-    conda     (params.enable_conda ? "bioconda::stacks=2.61" : null)
+    conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/stacks:2.61--hd03093a_1' :
         'quay.io/biocontainers/stacks:2.61--hd03093a_1' }"
