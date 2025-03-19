@@ -33,10 +33,6 @@
                   "type": "string",
                   "description": "[Stacks] Which restriction enzyme to use from the list Stacks supports, e.g. 'ecoRI'"
               },
-              "best_practice": {
-                  "type": "boolean",
-                  "description": "[Stacks] Run denovo stacks with 3 sets of parameters"
-              },
               "small_m": {
                   "type": "integer",
                   "default": 3,
