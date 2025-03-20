@@ -12,3 +12,27 @@ report_section_order:
 export_plots: true
 
 disable_version_detection: true
+
+custom_data:
+  vcftools_idepth:
+    file_format: "tsv"
+    section_name: "VCFTools: depth"
+    description: "Variant count (N_SITES) and mean depth (MEAN_DEPTH) per individual"
+    plot_type: "violin"
+  vcftools_missing_indv:
+    file_format: "tsv"
+    section_name: "VCFTools: missing-indv"
+    description: "Variant missingness per individual, given as a ratio in F_MISS where 1.0 is 100% missing"
+    plot_type: "violin"
+  vcftools_het:
+    file_format: "tsv"
+    section_name: "VCFTools: het"
+    description: "Variants per individual, observed number of homozygeous sites [O(hom)], expected number of homozygeous sites [E(hom)], number of sites (N_SITES) and inbreeding coefficient F"
+    plot_type: "violin"
+sp:
+  vcftools_idepth:
+    fn: "*.idepth"
+  vcftools_missing_indv:
+    fn: "*.imiss"
+  vcftools_het:
+    fn: "*.het"

@@ -14,7 +14,7 @@ include { methodsDescriptionText } from '../subworkflows/local/utils_nfcore_radq
 include { TRIMMOMATIC                 } from '../modules/nf-core/trimmomatic/main'
 include { STACKS_PROCESS_RADTAGS      } from '../modules/local/stacks/process_radtags/main'
 include { STACKS_DENOVO_MAP           } from '../modules/local/stacks/denovo_map/main'
-
+include { VCFTOOLS_MANY               } from '../subworkflows/local/vcftools_many'
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     RUN MAIN WORKFLOW
@@ -59,14 +59,26 @@ workflow RADQC {
         [id: 'stacks_denovo_map'],
         STACKS_PROCESS_RADTAGS.out.processed_reads.collect{it[1]}
     )
+
+    VCFTOOLS_MANY (
+        STACKS_DENOVO_MAP.out.vcf
+    )
+
     ch_multiqc_files = ch_multiqc_files.mix(FASTQC.out.zip.collect{it[1]})
     ch_multiqc_files = ch_multiqc_files.mix(TRIMMOMATIC.out.out_log.collect{it[1]})
     ch_multiqc_files = ch_multiqc_files.mix(STACKS_PROCESS_RADTAGS.out.radtag_log.collect{it[1]})
     ch_multiqc_files = ch_multiqc_files.mix(STACKS_DENOVO_MAP.out.distrib_logs.collect{it[1]})
     ch_multiqc_files = ch_multiqc_files.mix(STACKS_DENOVO_MAP.out.sumstats_summary.collect{it[1]})
+    ch_multiqc_files = ch_multiqc_files.mix(VCFTOOLS_MANY.out.vcftools_relatedness2.collect{it[1]})
+    ch_multiqc_files = ch_multiqc_files.mix(VCFTOOLS_MANY.out.vcftools_het.collect{it[1]})
+    ch_multiqc_files = ch_multiqc_files.mix(VCFTOOLS_MANY.out.vcftools_idepth.collect{it[1]})
+    ch_multiqc_files = ch_multiqc_files.mix(VCFTOOLS_MANY.out.vcftools_imiss.collect{it[1]})
+
     ch_versions = ch_versions.mix(FASTQC.out.versions.first())
     ch_versions = ch_versions.mix(TRIMMOMATIC.out.versions.first())
     ch_versions = ch_versions.mix(STACKS_PROCESS_RADTAGS.out.versions.first())
+    ch_versions = ch_versions.mix(VCFTOOLS_MANY.out.versions.first())
+
 
     //
     // Collate and save software versions
