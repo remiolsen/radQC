@@ -15,14 +15,15 @@ process STACKS_DENOVO_MAP {
     tuple val(meta), path("*.log.distribs"), emit: distrib_logs
     tuple val(meta), path("populations.sumstats_summary.tsv"), emit: sumstats_summary
     tuple val(meta), path("*.*"), emit: denovo_outputs
+    tuple val(meta), path("populations.snps.vcf"), emit: vcf
     path "versions.yml", emit: versions
 
     script:
-    def outputs = params.genepop ? "--genepop ":""
+    def outputs = "--vcf "
+    outputs += params.genepop ? "--genepop ":""
     outputs += params.structure ? "--structure ":""
     outputs += params.plink ? "--plink ":""
     outputs += params.phylip ? "--phylip ":""
-    outputs += params.vcf ? "--vcf ":""
     outputs += params.radpainter ? "--radpainter ":""
     outputs += params.fasta_out ? "--fasta-loci --fasta-samples ":""
 
