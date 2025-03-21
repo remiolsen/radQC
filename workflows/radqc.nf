@@ -56,12 +56,15 @@ workflow RADQC {
     )
 
     STACKS_DENOVO_MAP (
-        [id: 'stacks_denovo_map'],
+        STACKS_PROCESS_RADTAGS.out.processed_reads.collect{it[0]},
         STACKS_PROCESS_RADTAGS.out.processed_reads.collect{it[1]}
     )
 
+
+    ch_denovo_vcf = STACKS_DENOVO_MAP.out.vcf.map { it -> [[id: "stacks_denovo_map"], it] }
+
     VCFTOOLS_MANY (
-        STACKS_DENOVO_MAP.out.vcf
+        ch_denovo_vcf
     )
 
     ch_multiqc_files = ch_multiqc_files.mix(FASTQC.out.zip.collect{it[1]})

@@ -1,5 +1,5 @@
 process STACKS_DENOVO_MAP {
-    tag "$meta.id"
+    tag "stacks_denovo_map"
     label 'process_high'
 
     conda "${moduleDir}/environment.yml"
@@ -9,13 +9,13 @@ process STACKS_DENOVO_MAP {
 
     input:
     val meta
-    path samples, stageAs: "processed_reads/*"
+    path reads, stageAs: "processed_reads/*"
 
     output:
-    tuple val(meta), path("*.log.distribs"), emit: distrib_logs
-    tuple val(meta), path("populations.sumstats_summary.tsv"), emit: sumstats_summary
-    tuple val(meta), path("*.*"), emit: denovo_outputs
-    tuple val(meta), path("populations.snps.vcf"), emit: vcf
+    path "*.log.distribs", emit: distrib_logs
+    path "populations.sumstats_summary.tsv", emit: sumstats_summary
+    path "*.*", emit: denovo_outputs
+    path "populations.snps.vcf", emit: vcf
     path "versions.yml", emit: versions
 
     script:
@@ -27,11 +27,8 @@ process STACKS_DENOVO_MAP {
     outputs += params.radpainter ? "--radpainter ":""
     outputs += params.fasta_out ? "--fasta-loci --fasta-samples ":""
 
-    def usamples = []
-    samples.each {usamples += ["${it.simpleName}\tradseqQC\n"]}
-    usamples = usamples.unique()
     def p_string = ""
-    usamples.each {p_string += "${it}"}
+    meta.each {p_string += "${it.id}\t${it.pop}\n"}
 
     """
     printf "${p_string}" > popmap.txt

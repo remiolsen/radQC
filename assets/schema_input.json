@@ -13,6 +13,12 @@
         "errorMessage": "Sample name must be provided and cannot contain spaces",
         "meta": ["id"]
       },
+      "population": {
+        "type": "string",
+        "pattern": "^\\S+$",
+        "errorMessage": "Population name must be provided and cannot contain spaces",
+        "meta": ["pop"]
+      },
       "fastq_1": {
         "type": "string",
         "format": "file-path",
@@ -28,6 +34,6 @@
         "errorMessage": "FastQ file for reads 2 cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'"
       }
     },
-    "required": ["sample", "fastq_1", "fastq_2"]
+    "required": ["sample", "population", "fastq_1", "fastq_2"]
   }
 }
