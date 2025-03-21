@@ -63,12 +63,6 @@
                   "description": "[Stacks] parameter",
                   "hidden": true
               },
-              "vcf": {
-                  "type": "boolean",
-                  "default": true,
-                  "description": "[Stacks] parameter",
-                  "hidden": true
-              },
               "phylip": {
                   "type": "boolean",
                   "description": "[Stacks] parameter",
