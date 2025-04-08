@@ -16,6 +16,19 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 - [MultiQC](#multiqc) - Aggregate report describing results and QC from the whole pipeline
 - [Pipeline information](#pipeline-information) - Report metrics generated during the workflow execution
 
+### Trimmomatic
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `trimmomatic/`
+  - `*.paired.trim_{1,2}.fastq.gz`: Quality and adapter trimmed reads
+  - `*.summary`: Summary of read survival rates after trimming
+
+</details>
+
+[Trimmomatic](http://www.usadellab.org/cms/?page=trimmomatic) is a widely-used tool for preprocessing high-throughput sequencing data, focusing on tasks like adapter removal and quality trimming to enhance read quality. 
+
 ### FastQC
 
 <details markdown="1">
@@ -28,6 +41,38 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 </details>
 
 [FastQC](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/) gives general quality metrics about your sequenced reads. It provides information about the quality score distribution across your reads, per base sequence content (%A/T/G/C), adapter contamination and overrepresented sequences. For further reading and documentation see the [FastQC help pages](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/Help/).
+
+
+### Stacks process_radtags
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `process_radtags/`
+  - `*.{1,2}.fq.gz`: Processed reads output by Stacks
+  - `*.process_radtags.log`: A summary of read counts removed by the various filters
+
+</details>
+
+
+[Stacks process_radtags](https://catchenlab.life.illinois.edu/stacks/comp/process_radtags.php) is a command from the Stacks software suite, developed by the Catchen lab. The `process_radtags` command is designed to demultiplex and clean raw sequencing data generated from RAD-seq experiments. It performs tasks such as quality filtering, adapter removal, and barcode demultiplexing.
+
+### Stacks denovo_map
+
+<details markdown="1">
+<summary>Output files (summary)</summary>
+
+- `denovo_stacks/`
+  - `*.{tags,snps,alleles}.tsv.gz`: Per sample based loci and allele calls (ustacks)
+  - `catalog.{tags,snps,alleles}.tsv.gz`: A catalog or a set of consensus loci, snps and alleles (cstacks)
+  - `*.matches.bam`: Per sample matches to the catalog (sstacks + tsv2bam)
+  - `populations.snps.vcf`: Polymorphic sites in VCF format (populations)
+  - `denovo_map.log`: Running log file for the whole denovo_map.pl pipeline
+
+</details>
+
+[Stacks denovo_map.pl](https://catchenlab.life.illinois.edu/stacks/comp/denovo_map.php) pipeline developed by the Catchen lab. The pipeline is designed for de novo assembly and genotyping of RAD-seq data, enabling the identification of loci and genetic variants without the need for a reference genome.
+It processes raw sequencing reads, clusters them into loci, and performs SNP calling and genotyping across multiple samples. The script automates the execution of various Stacks modules, including `ustacks`, `cstacks`, `sstacks`, and `populations`.
 
 ### MultiQC
 
