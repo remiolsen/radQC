@@ -74,6 +74,22 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 [Stacks denovo_map.pl](https://catchenlab.life.illinois.edu/stacks/comp/denovo_map.php) pipeline developed by the Catchen lab. The pipeline is designed for de novo assembly and genotyping of RAD-seq data, enabling the identification of loci and genetic variants without the need for a reference genome.
 It processes raw sequencing reads, clusters them into loci, and performs SNP calling and genotyping across multiple samples. The script automates the execution of various Stacks modules, including `ustacks`, `cstacks`, `sstacks`, and `populations`.
 
+### VCFtools
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `vcftools/`
+  - `stacks_denovo_map.het`: Heterozygosity per individual, inbreeding coefficient F
+  - `stacks_denovo_map.idepth`: Mean sequence depth per individual
+  - `stacks_denovo_map.imiss`: Variant missingness per individual
+  - `stacks_denovo_map.relatedness2`: Relatedness statistic (based on doi:10.1093/bioinformatics/btq559)
+
+</details>
+
+[VCFtools](https://vcftools.github.io/) is a software suite for working with VCF files, a standard format for storing genetic variation data. It provides tools for filtering, summarizing, and analyzing variant data, enabling researchers to perform population genetics analyses and quality control.
+
+
 ### MultiQC
 
 <details markdown="1">
