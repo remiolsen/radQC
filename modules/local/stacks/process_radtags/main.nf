@@ -32,7 +32,7 @@ process STACKS_PROCESS_RADTAGS {
     mv *_2.rem.2.fq.gz ${prefix}.rem2.fq.gz
     mv *_1.1.fq.gz ${prefix}.1.fq.gz
     mv *_2.2.fq.gz ${prefix}.2.fq.gz
-
+    mv process_radtags.log ${prefix}.process_radtags.log
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         stacks: \$(ustacks --help 2>&1 | sed '2,\$d; s/ustacks //g')
