@@ -20,18 +20,26 @@ process STACKS_PROCESS_RADTAGS {
 
     script:
     def prefix = reads[0].simpleName
+    def args = task.ext.args ?: ''
+    def paired_end = reads instanceof List
+    def read_param = paired_end ? "-1 ${reads[0]} -2 ${reads[1]}": "-f $reads"
+    def mv_cmds = "mv *.fq.gz ${prefix}.1.fq.gz"
+    if (paired_end) {
+        mv_cmds = """
+            mv *_1.rem.1.fq.gz ${prefix}.rem1.fq.gz
+            mv *_2.rem.2.fq.gz ${prefix}.rem2.fq.gz
+            mv *_1.1.fq.gz ${prefix}.1.fq.gz
+            mv *_2.2.fq.gz ${prefix}.2.fq.gz
+        """
+    }
     """
-    process_radtags -i gzfastq \\
-    -1 ${reads[0]} \\
-    -2 ${reads[1]} \\
+    process_radtags \\
+    ${read_param} \\
     -e ${params.enzyme} \\
     --threads ${task.cpus} \\
-    -o . -r -c
+    ${args}
 
-    mv *_1.rem.1.fq.gz ${prefix}.rem1.fq.gz
-    mv *_2.rem.2.fq.gz ${prefix}.rem2.fq.gz
-    mv *_1.1.fq.gz ${prefix}.1.fq.gz
-    mv *_2.2.fq.gz ${prefix}.2.fq.gz
+    ${mv_cmds}
     mv process_radtags.log ${prefix}.process_radtags.log
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
