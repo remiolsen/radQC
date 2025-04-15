@@ -4,6 +4,12 @@
 
 **remiolsen/radqc** is a bioinformatics best-practice analysis pipeline for Pipeline for QC of RAD-seq data.
 
+- [Documentation](#documentation)
+- [Quick start](#quick-start)
+- [NGI data and usage](#ngi-data-and-usage)
+- [Contributions and Support](#contributions-and-support)
+- [Citations](#citations)
+
 ## Documentation
 
 Please see the more detailed [usage documentation](docs/README.md)
@@ -40,7 +46,30 @@ nextflow run remiolsen/radqc \
 ```
 
 > [!WARNING]
-> Please provide pipeline parameters via the CLI or Nextflow `-params-file` option. Custom config files including those provided by the `-c` Nextflow option can be used to provide any configuration _**except for parameters**_; see [docs](https://nf-co.re/docs/usage/getting_started/configuration#custom-configuration-files).
+> Please provide pipeline parameters via the CLI or Nextflow `-params-file` option. Custom config files including those provided by the `-c` Nextflow option can be used to provide any configuration _**except for parameters**_; see [docs](https://nf-co.re/docs/usage/getting_started/configuration#custom-configuration-files). Quick reference as of 2025-04-15 for running the pipeline:
+
+```bash
+nextflow run /path/to/remiolsen-radqc/ \
+--trim_truncate 130 \
+--trim_head 5 \
+--enzyme ecoRI \
+--input samplesheet.csv \
+--outdir ./results \
+--project ngi2016004 \
+-profile singularity \
+-c /path/to/remiolsen-radqc/configs/conf/uppmax.config
+```
+
+For offline use the pipeline is downloaded using nf-core [tools](https://nf-co.re/tools) and including institutional configs specifically for Miarka/UPPMAX, e.g. `nf-core pipelines download -u yes -s singularity <pipeline name>`
+
+* `--trim_truncate 130` This is to trim the reads to a uniform length. Traditionally Stacks only supported uniform lengths, so consider skipping if the libraries have a much longer insert than 300 nt.
+* `--enzyme ecoRI` NGI rad-seq data made from digestion fragments of ecoRI
+* `--trim_head 5` EcoRI have a cut site / overhang (AATTC) that can lead to low complexity and low quality sequecing in the first 5 cycles. You can check if this the case by running fastQC on the raw data, but this parameter will trim the first 5 nts.
+* `-profile singularity` Container system supported on UPPMAX
+
+## NGI data and usage
+
+This section describes parameter considerations when running this pipeline on data produced by [NGI Sweden](https://ngisweden.scilifelab.se/methods/rad-sequencing/), and additionally when running the pipeline on the Miarka cluster. 
 
 ## Credits
 
