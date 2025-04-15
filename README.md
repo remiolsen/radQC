@@ -46,7 +46,11 @@ nextflow run remiolsen/radqc \
 ```
 
 > [!WARNING]
-> Please provide pipeline parameters via the CLI or Nextflow `-params-file` option. Custom config files including those provided by the `-c` Nextflow option can be used to provide any configuration _**except for parameters**_; see [docs](https://nf-co.re/docs/usage/getting_started/configuration#custom-configuration-files). Quick reference as of 2025-04-15 for running the pipeline:
+> Please provide pipeline parameters via the CLI or Nextflow `-params-file` option. Custom config files including those provided by the `-c` Nextflow option can be used to provide any configuration _**except for parameters**_; see [docs](https://nf-co.re/docs/usage/getting_started/configuration#custom-configuration-files).
+
+## NGI data and usage
+
+This section describes parameter considerations when running this pipeline on data produced by [NGI Sweden](https://ngisweden.scilifelab.se/methods/rad-sequencing/), and additionally when running the pipeline on the Miarka cluster. Quick reference as of 2025-04-15 for running the pipeline:
 
 ```bash
 nextflow run /path/to/remiolsen-radqc/ \
@@ -67,9 +71,6 @@ For offline use the pipeline is downloaded using nf-core [tools](https://nf-co.r
 * `--trim_head 5` EcoRI have a cut site / overhang (AATTC) that can lead to low complexity and low quality sequecing in the first 5 cycles. You can check if this the case by running fastQC on the raw data, but this parameter will trim the first 5 nts.
 * `-profile singularity` Container system supported on UPPMAX
 
-## NGI data and usage
-
-This section describes parameter considerations when running this pipeline on data produced by [NGI Sweden](https://ngisweden.scilifelab.se/methods/rad-sequencing/), and additionally when running the pipeline on the Miarka cluster. 
 
 ## Credits
 
