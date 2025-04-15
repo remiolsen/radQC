@@ -18,6 +18,18 @@
 
 > Ewels P, Magnusson M, Lundin S, Käller M. MultiQC: summarize analysis results for multiple tools and samples in a single report. Bioinformatics. 2016 Oct 1;32(19):3047-8. doi: 10.1093/bioinformatics/btw354. Epub 2016 Jun 16. PubMed PMID: 27312411; PubMed Central PMCID: PMC5039924.
 
+- [Trimmomatic](https://academic.oup.com/bioinformatics/article/30/15/2114/2390096)
+
+> Bolger, A.M., Lohse, M. and Usadel, B., 2014. Trimmomatic: a flexible trimmer for Illumina sequence data. Bioinformatics, 30(15), pp.2114-2120.
+
+- [Stacks](https://onlinelibrary.wiley.com/doi/full/10.1111/mec.15253)
+
+> N. Rochette, A. Rivera‐Colón, and J. Catchen. Stacks 2: Analytical methods for paired‐end sequencing improve RADseq‐based population genomics. Molecular Ecology, 28(21):4737-4754. 2019.
+
+- [VCFTools](https://academic.oup.com/bioinformatics/article/27/15/2156/402296)
+
+> Danecek, P., Auton, A., Abecasis, G., Albers, C.A., Banks, E., DePristo, M.A., Handsaker, R.E., Lunter, G., Marth, G.T., Sherry, S.T. and McVean, G., 2011. The variant call format and VCFtools. Bioinformatics, 27(15), pp.2156-215
+
 ## Software packaging/containerisation tools
 
 - [Anaconda](https://anaconda.com)
