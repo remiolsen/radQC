@@ -22,7 +22,7 @@ Please see the more detailed [usage documentation](docs/README.md)
 To test your nextflow / Docker / Singularity setup on your computer you can run the pipeline using test data:
 
 ```
-nextflow run remiolsen/radQC -profile <docker,singularity>,test -r master
+nextflow run remiolsen/radQC -profile <docker,singularity>,test -r master --outdir results
 ```
 
 When you this test run is successfully completed, or if you elect to skip it you can start your analysis run. First by preparing a samplesheet with your input data that looks as follows:
