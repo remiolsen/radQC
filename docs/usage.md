@@ -2,13 +2,15 @@
 
 ## Introduction
 
-This pipeline built around Stacks from the Catchen lab. There are several parameters which directly interact with Stacks and might greatly affect the resulting variant calls: `--enzyme` (--enz in Stacks), `small_m` (-m), `small_n` (-n) and `big_m` (-M).
+This pipeline built around the [Stacks](https://catchenlab.life.illinois.edu/stacks/) software from the Catchen lab. There are several parameters which directly interact with Stacks and might greatly affect the resulting variant calls: `--enzyme` (--enz in Stacks), `small_m` (-m), `small_n` (-n) and `big_m` (-M).
 Additionally there are free input parameters to:
 1. Stacks process_radtags, e.g. `--process_radtags_options="--disable-rad-check --retain-header"`
 2. Stacks denovo_map.pl, e.g. `--denovo_map_options="--var-alpha 0.01"`
-3. Stacks denovo_map.pl parameter`-X "populations: <option1> <option2> ..."`, e.g. `--denovo_map_populationsX="--structure --plink"`
+3. Stacks denovo_map.pl parameter `-X "populations: <option1> <option2> ..."`, e.g. `--denovo_map_populationsX="--structure --plink"`
 
 Please consult the Stacks [manual](https://catchenlab.life.illinois.edu/stacks/manual/) and related literature on how to best tune the parameters to your data.
+
+## Table of content
 
 - [Samplesheet input](#samplesheet-input)
   - [Multiple runs of the same sample](#multiple-runs-of-the-same-sample)
