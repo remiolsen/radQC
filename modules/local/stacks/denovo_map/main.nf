@@ -18,15 +18,11 @@ process STACKS_DENOVO_MAP {
     path "populations.snps.vcf", emit: vcf
     path "versions.yml", emit: versions
 
-    script:
-    def outputs = "--vcf "
-    outputs += params.genepop ? "--genepop ":""
-    outputs += params.structure ? "--structure ":""
-    outputs += params.plink ? "--plink ":""
-    outputs += params.phylip ? "--phylip ":""
-    outputs += params.radpainter ? "--radpainter ":""
-    outputs += params.fasta_out ? "--fasta-loci --fasta-samples ":""
+    when:
+    task.ext.when == null || task.ext.when
 
+    script:
+    def args = task.ext.args ?: ''
     def p_string = ""
     meta.each {p_string += "${it.id}\t${it.pop}\n"}
 
@@ -39,7 +35,8 @@ process STACKS_DENOVO_MAP {
     -M ${params.big_m} \\
     -n ${params.small_n} \\
     -T ${task.cpus} \\
-    -X "populations: ${outputs}"
+    ${args}
+
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         stacks: \$(ustacks --help 2>&1 | sed '2,\$d; s/ustacks //g')

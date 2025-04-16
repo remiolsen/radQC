@@ -10,17 +10,14 @@ Parameters inputted to the various processes in the pipeline
 |-----------|-----------|-----------|-----------|-----------|-----------|
 | `trim_adapters` | Adaptors to use for trimming | `string` | ${baseDir}/assets/adapters.fa |  | True |
 | `trim_truncate` | Truncate reads reads after trimming to a fixed length. Minimum 30. | `integer` | 125 |  |  |
-| `trim_head` | Trim a fixed no. bases from beginning of reads | `integer` | 0 |  |  |
-| `enzyme` | [Stacks] Which restriction enzyme to use from the list Stacks supports, e.g. 'ecoRI' | `string` |  | True |  |
-| `small_m` | [Stacks] parameter | `integer` | 3 | True |  |
-| `small_n` | [Stacks] parameter | `integer` | 1 | True |  |
-| `big_m` | [Stacks] parameter | `integer` | 2 | True |  |
-| `genepop` | [Stacks] parameter | `boolean` |  |  | True |
-| `structure` | [Stacks] parameter | `boolean` |  |  | True |
-| `plink` | [Stacks] parameter | `boolean` |  |  | True |
-| `phylip` | [Stacks] parameter | `boolean` |  |  | True |
-| `radpainter` | [Stacks] parameter | `boolean` |  |  | True |
-| `fasta_out` | [Stacks] parameter | `boolean` | True |  | True |
+| `trim_head` | Trim a fixed no. bases from beginning of reads. Use with care as this might remove the RAD site. | `integer` | 0 |  |  |
+| `enzyme` | [Stacks process_radtags] Which restriction enzyme to use from the list Stacks supports, e.g. 'ecoRI' | `string` |  | True |  |
+| `small_m` | [Stacks denovo_map] parameter | `integer` | 3 | True |  |
+| `small_n` | [Stacks denovo_map] parameter | `integer` | 1 | True |  |
+| `big_m` | [Stacks denovo_map] parameter | `integer` | 2 | True |  |
+| `process_radtags_options` | [Stacks process_radtags] Additional options to pass to process_radtags, e.g. --disable_rad_check, see: https://catchenlab.life.illinois.edu/stacks/comp/process_radtags.php | `string` |  |  | True |
+| `denovo_map_options` | [Stacks denovo_map] Additional options to pass to denovo_map.pl, e.g. --var-alpha 0.01, see: https://catchenlab.life.illinois.edu/stacks/comp/denovo_map.php | `string` |  |  | True |
+| `denovo_map_populationsX` | [Stacks denovo_map] Options to pass to denovo_map.pl via the -X option (-X 'populations: --option'), e.g. where 'option' is --structure, see: https://catchenlab.life.illinois.edu/stacks/comp/populations.php | `string` |  |  | True |
 
 ## Input/output options
 

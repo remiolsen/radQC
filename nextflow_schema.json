@@ -27,56 +27,40 @@
               "trim_head": {
                   "type": "integer",
                   "default": 0,
-                  "description": "Trim a fixed no. bases from beginning of reads"
+                  "description": "Trim a fixed no. bases from beginning of reads. Use with care as this might remove the RAD site."
               },
               "enzyme": {
                   "type": "string",
-                  "description": "[Stacks] Which restriction enzyme to use from the list Stacks supports, e.g. 'ecoRI'"
+                  "description": "[Stacks process_radtags] Which restriction enzyme to use from the list Stacks supports, e.g. 'ecoRI'"
               },
               "small_m": {
                   "type": "integer",
                   "default": 3,
-                  "description": "[Stacks] parameter"
+                  "description": "[Stacks denovo_map] parameter"
               },
               "small_n": {
                   "type": "integer",
                   "default": 1,
-                  "description": "[Stacks] parameter"
+                  "description": "[Stacks denovo_map] parameter"
               },
               "big_m": {
                   "type": "integer",
                   "default": 2,
-                  "description": "[Stacks] parameter"
+                  "description": "[Stacks denovo_map] parameter"
               },
-              "genepop": {
-                  "type": "boolean",
-                  "description": "[Stacks] parameter",
+              "process_radtags_options": {
+                  "type": "string",
+                  "description": "[Stacks process_radtags] Additional options to pass to process_radtags, e.g. --disable_rad_check, see: https://catchenlab.life.illinois.edu/stacks/comp/process_radtags.php",
                   "hidden": true
               },
-              "structure": {
-                  "type": "boolean",
-                  "description": "[Stacks] parameter",
+              "denovo_map_options": {
+                  "type": "string",
+                  "description": "[Stacks denovo_map] Additional options to pass to denovo_map.pl, e.g. --var-alpha 0.01, see: https://catchenlab.life.illinois.edu/stacks/comp/denovo_map.php",
                   "hidden": true
               },
-              "plink": {
-                  "type": "boolean",
-                  "description": "[Stacks] parameter",
-                  "hidden": true
-              },
-              "phylip": {
-                  "type": "boolean",
-                  "description": "[Stacks] parameter",
-                  "hidden": true
-              },
-              "radpainter": {
-                  "type": "boolean",
-                  "description": "[Stacks] parameter",
-                  "hidden": true
-              },
-              "fasta_out": {
-                  "type": "boolean",
-                  "default": true,
-                  "description": "[Stacks] parameter",
+              "denovo_map_populationsX": {
+                  "type": "string",
+                  "description": "[Stacks denovo_map] Options to pass to denovo_map.pl via the -X option (-X 'populations: --option'), e.g. where 'option' is --structure, see: https://catchenlab.life.illinois.edu/stacks/comp/populations.php",
                   "hidden": true
               }
           }
