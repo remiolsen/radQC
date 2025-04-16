@@ -65,7 +65,7 @@ nextflow run /path/to/remiolsen-radqc/ \
 -c /path/to/remiolsen-radqc/configs/conf/uppmax.config
 ```
 
-For offline use the pipeline is downloaded using nf-core [tools](https://nf-co.re/tools) and including institutional configs specifically for Miarka/UPPMAX, e.g. `nf-core pipelines download -u yes -s singularity <pipeline name>`
+For offline use the pipeline is downloaded using nf-core [tools](https://nf-co.re/tools) and including institutional configs specifically for Miarka/UPPMAX, e.g. `nf-core pipelines download -c yes -s singularity <pipeline name>`
 
 * `--trim_truncate 130` This is to trim the reads to a uniform length. Traditionally Stacks only supported uniform lengths, so consider skipping if the libraries have a much longer insert than 300 nt.
 * `--enzyme ecoRI` NGI rad-seq data made from digestion fragments of ecoRI
