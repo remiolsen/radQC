@@ -29,14 +29,14 @@ When you this test run is successfully completed, or if you elect to skip it you
 
 `samplesheet.csv`:
 
-```csv
+```csv title="samplesheet.csv"
 sample,population,fastq_1,fastq_2
 sample101,pop1,AEG588A1_S1_L002_R1_001.fastq.gz,AEG588A1_S1_L002_R2_001.fastq.gz
 ```
 
 Now, you can run the pipeline using:
 
-```bash
+```bash title="run.sh"
 nextflow run remiolsen/radqc \
    -profile <docker/singularity/.../institute> \
    --input samplesheet.csv \
@@ -52,7 +52,7 @@ nextflow run remiolsen/radqc \
 
 This section describes parameter considerations when running this pipeline on data produced by [NGI Sweden](https://ngisweden.scilifelab.se/methods/rad-sequencing/), and additionally when running the pipeline on the Miarka cluster. Quick reference as of 2025-04-15 for running the pipeline:
 
-```bash
+```bash title="run.sh"
 nextflow run /path/to/remiolsen-radqc/ \
 --trim_truncate 130 \
 --trim_head 5 \

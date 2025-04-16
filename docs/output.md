@@ -16,7 +16,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 - [FastQC](#fastqc) - Quality control metrics for sequencing reads
 - [Stacks process_radtags](#stacks-process_radtags) - Demultiplexing and cleaning of RAD-seq data
 - [Stacks denovo_map](#stacks-denovo_map) - De novo assembly and genotyping of RAD-seq data
-- [VCFtools](#vcftools) - Analysis and filtering of VCF filesx
+- [VCFtools](#vcftools) - Analysis and filtering of VCF files
 - [Pipeline information](#pipeline-information) - Report metrics generated during the workflow execution
 
 ### MultiQC

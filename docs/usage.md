@@ -1,10 +1,32 @@
 # remiolsen/radqc: Usage
 
-> _Documentation of pipeline parameters is generated automatically from the pipeline schema and can no longer be found in markdown files._
-
 ## Introduction
 
-<!-- TODO nf-core: Add documentation about anything specific to running your pipeline. For general topics, please point to (and add to) the main nf-core website. -->
+This pipeline built around Stacks from the Catchen lab. There are several parameters which directly interact with Stacks and might greatly affect the resulting variant calls: `--enzyme` (--enz in Stacks), `small_m` (-m), `small_n` (-n) and `big_m` (-M).
+Additionally there are free input parameters to:
+1. Stacks process_radtags, e.g. `--process_radtags_options="--disable-rad-check --retain-header"`
+2. Stacks denovo_map.pl, e.g. `--denovo_map_options="--var-alpha 0.01"`
+3. Stacks denovo_map.pl parameter`-X "populations: <option1> <option2> ..."`, e.g. `--denovo_map_populationsX="--structure --plink"`
+
+Please consult the Stacks [manual](https://catchenlab.life.illinois.edu/stacks/manual/) and related literature on how to best tune the parameters to your data.
+
+- [Samplesheet input](#samplesheet-input)
+  - [Multiple runs of the same sample](#multiple-runs-of-the-same-sample)
+  - [Full samplesheet](#full-samplesheet)
+- [Running the pipeline](#running-the-pipeline)
+  - [Updating the pipeline](#updating-the-pipeline)
+  - [Reproducibility](#reproducibility)
+- [Core Nextflow arguments](#core-nextflow-arguments)
+  - [`-profile`](#profile)
+  - [`-resume`](#resume)
+  - [`-c`](#c)
+- [Custom configuration](#custom-configuration)
+  - [Resource requests](#resource-requests)
+  - [Custom Containers](#custom-containers)
+  - [Custom Tool Arguments](#custom-tool-arguments)
+  - [nf-core/configs](#nf-coreconfigs)
+- [Running in the background](#running-in-the-background)
+- [Nextflow memory requirements](#nextflow-memory-requirements)
 
 ## Samplesheet input
 
