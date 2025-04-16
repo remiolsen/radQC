@@ -50,7 +50,7 @@
               },
               "process_radtags_options": {
                   "type": "string",
-                  "description": "[Stacks process_radtags] Additional options to pass to process_radtags, e.g. --disable_rad_check, see: https://catchenlab.life.illinois.edu/stacks/comp/process_radtags.php",
+                  "description": "[Stacks process_radtags] Additional options to pass to process_radtags, e.g. --disable-rad-check, see: https://catchenlab.life.illinois.edu/stacks/comp/process_radtags.php",
                   "hidden": true
               },
               "denovo_map_options": {
