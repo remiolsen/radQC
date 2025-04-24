@@ -1,8 +1,8 @@
-# remiolsen/radqc
+# NationalGenomicsInfrastructure/radqc
 
 ## Introduction
 
-**remiolsen/radqc** is a bioinformatics best-practice analysis pipeline for Pipeline for QC of RAD-seq data.
+**NationalGenomicsInfrastructure/radqc** is a bioinformatics best-practice analysis pipeline for Pipeline for QC of RAD-seq data.
 
 - [Documentation](#documentation)
 - [Quick start](#quick-start)
@@ -22,7 +22,7 @@ Please see the more detailed [usage documentation](docs/README.md)
 To test your nextflow / Docker / Singularity setup on your computer you can run the pipeline using test data:
 
 ```
-nextflow run remiolsen/radQC -profile <docker,singularity>,test -r master --outdir results
+nextflow run NationalGenomicsInfrastructure/radQC -profile <docker,singularity>,test -r master --outdir results
 ```
 
 When you this test run is successfully completed, or if you elect to skip it you can start your analysis run. First by preparing a samplesheet with your input data that looks as follows:
@@ -37,7 +37,7 @@ sample101,pop1,AEG588A1_S1_L002_R1_001.fastq.gz,AEG588A1_S1_L002_R2_001.fastq.gz
 Now, you can run the pipeline using:
 
 ```bash title="run.sh"
-nextflow run remiolsen/radqc \
+nextflow run NationalGenomicsInfrastructure/radqc \
    -profile <docker/singularity/.../institute> \
    --input samplesheet.csv \
    --enzyme <enzyme> \
@@ -53,7 +53,7 @@ nextflow run remiolsen/radqc \
 This section describes parameter considerations when running this pipeline on data produced by [NGI Sweden](https://ngisweden.scilifelab.se/methods/rad-sequencing/), and additionally when running the pipeline on the Miarka cluster. Quick reference as of 2025-04-15 for running the pipeline:
 
 ```bash title="run.sh"
-nextflow run /path/to/remiolsen-radqc/ \
+nextflow run /path/to/NationalGenomicsInfrastructure-radqc/ \
 --trim_truncate 130 \
 --trim_head 5 \
 --enzyme ecoRI \
@@ -62,7 +62,7 @@ nextflow run /path/to/remiolsen-radqc/ \
 --outdir ./results \
 --project ngi2016004 \
 -profile singularity \
--c /path/to/remiolsen-radqc/configs/conf/uppmax.config
+-c /path/to/NationalGenomicsInfrastructure-radqc/configs/conf/uppmax.config
 ```
 
 For offline use the pipeline is downloaded using nf-core [tools](https://nf-co.re/tools) and including institutional configs specifically for Miarka/UPPMAX, e.g. `nf-core pipelines download -c yes -s singularity <pipeline name>`
@@ -76,7 +76,7 @@ For offline use the pipeline is downloaded using nf-core [tools](https://nf-co.r
 
 ## Credits
 
-remiolsen/radqc was originally written by Remi-André Olsen.
+NationalGenomicsInfrastructure/radqc was originally written by Remi-André Olsen.
 
 We thank the following people for their extensive assistance in the development of this pipeline:
 

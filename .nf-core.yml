@@ -82,11 +82,11 @@ lint:
     - nextflow_badge
 
 template:
-  org: remiolsen
+  org: NationalGenomicsInfrastructure
   name: radQC
   description: Pipeline for QC of RAD-seq data
   author: "Remi-Andr\xE9 Olsen"
-  version: 0.1.3dev
+  version: 0.3
   force: true
   outdir: .
   skip_features:

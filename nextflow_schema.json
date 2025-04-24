@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://raw.githubusercontent.com/remiolsen/radqc/master/nextflow_schema.json",
-  "title": "remiolsen/radqc pipeline parameters",
+  "$id": "https://raw.githubusercontent.com/NationalGenomicsInfrastructure/radqc/master/nextflow_schema.json",
+  "title": "NationalGenomicsInfrastructure/radqc pipeline parameters",
   "description": "Pipeline for QC of RAD-seq data",
   "type": "object",
   "$defs": {

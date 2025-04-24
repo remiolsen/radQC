@@ -1,10 +1,10 @@
 Run Name: $runName
 
 <% if (success){
-    out << "## remiolsen/radqc execution completed successfully! ##"
+    out << "## NationalGenomicsInfrastructure/radqc execution completed successfully! ##"
 } else {
     out << """####################################################
-## remiolsen/radqc execution completed unsuccessfully! ##
+## NationalGenomicsInfrastructure/radqc execution completed unsuccessfully! ##
 ####################################################
 The exit status of the task that caused the workflow execution to fail was: $exitStatus.
 The full error message was:
@@ -27,5 +27,5 @@ Pipeline Configuration:
 <% out << summary.collect{ k,v -> " - $k: $v" }.join("\n") %>
 
 --
-remiolsen/radqc
-https://github.com/remiolsen/radqc
+NationalGenomicsInfrastructure/radqc
+https://github.com/NationalGenomicsInfrastructure/radqc

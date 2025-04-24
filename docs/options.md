@@ -1,4 +1,4 @@
-# remiolsen/radqc pipeline parameters
+# NationalGenomicsInfrastructure/radqc pipeline parameters
 
 Pipeline for QC of RAD-seq data
 

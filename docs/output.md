@@ -1,4 +1,4 @@
-# remiolsen/radqc: Output
+# NationalGenomicsInfrastructure/radqc: Output
 
 ## Introduction
 
