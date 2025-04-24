@@ -1,9 +1,9 @@
 #!/usr/bin/env nextflow
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    remiolsen/radqc
+    NationalGenomicsInfrastructure/radqc
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    Github : https://github.com/remiolsen/radqc
+    Github : https://github.com/NationalGenomicsInfrastructure/radqc
 ----------------------------------------------------------------------------------------
 */
 
@@ -25,7 +25,7 @@ include { PIPELINE_COMPLETION     } from './subworkflows/local/utils_nfcore_radq
 //
 // WORKFLOW: Run main analysis pipeline depending on type of input
 //
-workflow REMIOLSEN_RADQC {
+workflow NGI_RADQC {
 
     take:
     samplesheet // channel: samplesheet read in from --input
@@ -65,7 +65,7 @@ workflow {
     //
     // WORKFLOW: Run main workflow
     //
-    REMIOLSEN_RADQC (
+    NGI_RADQC (
         PIPELINE_INITIALISATION.out.samplesheet
     )
     //
@@ -78,7 +78,7 @@ workflow {
         params.outdir,
         params.monochrome_logs,
         params.hook_url,
-        REMIOLSEN_RADQC.out.multiqc_report
+        NGI_RADQC.out.multiqc_report
     )
 }
 

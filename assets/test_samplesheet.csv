@@ -1,3 +1,3 @@
 sample,population,fastq_1,fastq_2
-ERR10780528,radseqQC,https://raw.githubusercontent.com/remiolsen/radQC/refs/heads/master/assets/testdata/ERR10780528_1.fastq.gz,https://raw.githubusercontent.com/remiolsen/radQC/refs/heads/master/assets/testdata/ERR10780528_2.fastq.gz
-ERR10782219,radseqQC,https://raw.githubusercontent.com/remiolsen/radQC/refs/heads/master/assets/testdata/ERR10782219_1.fastq.gz,https://raw.githubusercontent.com/remiolsen/radQC/refs/heads/master/assets/testdata/ERR10782219_2.fastq.gz
+ERR10780528,radseqQC,https://raw.githubusercontent.com/NationalGenomicsInfrastructure/radqc/refs/heads/master/assets/testdata/ERR10780528_1.fastq.gz,https://raw.githubusercontent.com/NationalGenomicsInfrastructure/radqc/refs/heads/master/assets/testdata/ERR10780528_2.fastq.gz
+ERR10782219,radseqQC,https://raw.githubusercontent.com/NationalGenomicsInfrastructure/radqc/refs/heads/master/assets/testdata/ERR10782219_1.fastq.gz,https://raw.githubusercontent.com/NationalGenomicsInfrastructure/radqc/refs/heads/master/assets/testdata/ERR10782219_2.fastq.gz

@@ -1,6 +1,6 @@
 {
-  "name": "remiolsen/radqc",
-  "homePage": "https://github.com/remiolsen/radqc",
+  "name": "NationalGenomicsInfrastructure/radqc",
+  "homePage": "https://github.com/NationalGenomicsInfrastructure/radqc",
   "repos": {
     "https://github.com/nf-core/modules.git": {
       "modules": {

@@ -1,5 +1,5 @@
 //
-// Subworkflow with functionality specific to the remiolsen/radqc pipeline
+// Subworkflow with functionality specific to the NationalGenomicsInfrastructure/radqc pipeline
 //
 
 /*
