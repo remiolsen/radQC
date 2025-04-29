@@ -1,212 +1,253 @@
 {
-  "@context": "https://w3id.org/ro/crate/1.1/context",
-  "@graph": [
-    {
-      "@id": "./",
-      "@type": "Dataset",
-      "creativeWorkStatus": "InProgress",
-      "datePublished": "2025-02-21T14:03:01+00:00",
-      "description": "# NationalGenomicsInfrastructure/radqc\n\n## Introduction\n\n**NationalGenomicsInfrastructure/radqc** is a bioinformatics pipeline that ...\n\n<!-- TODO nf-core:\n   Complete this sentence with a 2-3 sentence summary of what types of data the pipeline ingests, a brief overview of the\n   major pipeline sections and the types of output it produces. You're giving an overview to someone new\n   to nf-core here, in 15-20 seconds. For an example, see https://github.com/nf-core/rnaseq/blob/master/README.md#introduction\n-->\n\n<!-- TODO nf-core: Include a figure that guides the user through the major workflow steps. Many nf-core\n     workflows use the \"tube map\" design for that. See https://nf-co.re/docs/contributing/design_guidelines#examples for examples.   -->\n<!-- TODO nf-core: Fill in short bullet-pointed list of the default steps in the pipeline -->1. Read QC ([`FastQC`](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/))2. Present QC for raw reads ([`MultiQC`](http://multiqc.info/))\n\n## Usage\n\n> [!NOTE]\n> If you are new to Nextflow and nf-core, please refer to [this page](https://nf-co.re/docs/usage/installation) on how to set-up Nextflow. Make sure to [test your setup](https://nf-co.re/docs/usage/introduction#how-to-run-a-pipeline) with `-profile test` before running the workflow on actual data.\n\n<!-- TODO nf-core: Describe the minimum required steps to execute the pipeline, e.g. how to prepare samplesheets.\n     Explain what rows and columns represent. For instance (please edit as appropriate):\n\nFirst, prepare a samplesheet with your input data that looks as follows:\n\n`samplesheet.csv`:\n\n```csv\nsample,fastq_1,fastq_2\nCONTROL_REP1,AEG588A1_S1_L002_R1_001.fastq.gz,AEG588A1_S1_L002_R2_001.fastq.gz\n```\n\nEach row represents a fastq file (single-end) or a pair of fastq files (paired end).\n\n-->\n\nNow, you can run the pipeline using:\n\n<!-- TODO nf-core: update the following command to include all required parameters for a minimal example -->\n\n```bash\nnextflow run NationalGenomicsInfrastructure/radqc \\\n   -profile <docker/singularity/.../institute> \\\n   --input samplesheet.csv \\\n   --outdir <OUTDIR>\n```\n\n> [!WARNING]\n> Please provide pipeline parameters via the CLI or Nextflow `-params-file` option. Custom config files including those provided by the `-c` Nextflow option can be used to provide any configuration _**except for parameters**_; see [docs](https://nf-co.re/docs/usage/getting_started/configuration#custom-configuration-files).\n\n## Credits\n\nNationalGenomicsInfrastructure/radqc was originally written by Remi-Andr\u00e9 Olsen.\n\nWe thank the following people for their extensive assistance in the development of this pipeline:\n\n<!-- TODO nf-core: If applicable, make list of people who have also contributed -->\n\n## Contributions and Support\n\nIf you would like to contribute to this pipeline, please see the [contributing guidelines](.github/CONTRIBUTING.md).\n\n## Citations\n\n<!-- TODO nf-core: Add citation for pipeline after first release. Uncomment lines below and update Zenodo doi and badge at the top of this file. -->\n<!-- If you use NationalGenomicsInfrastructure/radqc for your analysis, please cite it using the following doi: [10.5281/zenodo.XXXXXX](https://doi.org/10.5281/zenodo.XXXXXX) -->\n\n<!-- TODO nf-core: Add bibliography of tools and data used in your pipeline -->\n\nAn extensive list of references for the tools used by the pipeline can be found in the [`CITATIONS.md`](CITATIONS.md) file.\n\nThis pipeline uses code and infrastructure developed and maintained by the [nf-core](https://nf-co.re) community, reused here under the [MIT license](https://github.com/nf-core/tools/blob/main/LICENSE).\n\n> **The nf-core framework for community-curated bioinformatics pipelines.**\n>\n> Philip Ewels, Alexander Peltzer, Sven Fillinger, Harshil Patel, Johannes Alneberg, Andreas Wilm, Maxime Ulysse Garcia, Paolo Di Tommaso & Sven Nahnsen.\n>\n> _Nat Biotechnol._ 2020 Feb 13. doi: [10.1038/s41587-020-0439-x](https://dx.doi.org/10.1038/s41587-020-0439-x).\n",
-      "hasPart": [
+    "@context": "https://w3id.org/ro/crate/1.1/context",
+    "@graph": [
         {
-          "@id": "main.nf"
+            "@id": "./",
+            "@type": "Dataset",
+            "creativeWorkStatus": "Stable",
+            "datePublished": "2025-04-29T09:29:24+00:00",
+            "description": "# NationalGenomicsInfrastructure/radqc\n\n## Introduction\n\n**NationalGenomicsInfrastructure/radqc** is a bioinformatics best-practice analysis pipeline for Pipeline for QC of RAD-seq data.\n\n- [Documentation](#documentation)\n- [Quick start](#quick-start)\n- [NGI data and usage](#ngi-data-and-usage)\n- [Contributions and Support](#contributions-and-support)\n- [Citations](#citations)\n\n## Documentation\n\nPlease see the more detailed [usage documentation](docs/README.md)\n\n## Quick start\n\n> [!NOTE]\n> If you are new to Nextflow and nf-core, please refer to [this page](https://nf-co.re/docs/usage/installation) on how to set-up Nextflow. Make sure to [test your setup](https://nf-co.re/docs/usage/introduction#how-to-run-a-pipeline) with `-profile test` before running the workflow on actual data.\n\nTo test your nextflow / Docker / Singularity setup on your computer you can run the pipeline using test data:\n\n```\nnextflow run NationalGenomicsInfrastructure/radQC -profile <docker,singularity>,test -r master --outdir results\n```\n\nWhen you this test run is successfully completed, or if you elect to skip it you can start your analysis run. First by preparing a samplesheet with your input data that looks as follows:\n\n`samplesheet.csv`:\n\n```csv title=\"samplesheet.csv\"\nsample,population,fastq_1,fastq_2\nsample101,pop1,AEG588A1_S1_L002_R1_001.fastq.gz,AEG588A1_S1_L002_R2_001.fastq.gz\n```\n\nNow, you can run the pipeline using:\n\n```bash title=\"run.sh\"\nnextflow run NationalGenomicsInfrastructure/radqc \\\n   -profile <docker/singularity/.../institute> \\\n   --input samplesheet.csv \\\n   --enzyme <enzyme> \\\n   --outdir <OUTDIR> \\\n   -r <master,v##.##>\n```\n\n> [!WARNING]\n> Please provide pipeline parameters via the CLI or Nextflow `-params-file` option. Custom config files including those provided by the `-c` Nextflow option can be used to provide any configuration _**except for parameters**_; see [docs](https://nf-co.re/docs/usage/getting_started/configuration#custom-configuration-files).\n\n## NGI data and usage\n\nThis section describes parameter considerations when running this pipeline on data produced by [NGI Sweden](https://ngisweden.scilifelab.se/methods/rad-sequencing/), and additionally when running the pipeline on the Miarka cluster. Quick reference as of 2025-04-15 for running the pipeline:\n\n```bash title=\"run.sh\"\nnextflow run /path/to/NationalGenomicsInfrastructure-radqc/ \\\n--trim_truncate 130 \\\n--trim_head 5 \\\n--enzyme ecoRI \\\n--process_radtags_options='--disable-rad-check' \\\n--input samplesheet.csv \\\n--outdir ./results \\\n--project ngi2016004 \\\n-profile singularity \\\n-c /path/to/NationalGenomicsInfrastructure-radqc/configs/conf/uppmax.config\n```\n\nThere is a convenience [script](bin/samplesheet_gen.py) to generate a samplesheet that will search for `P???_???` named NGI samples:\n\n```bash\npython /path/to/NationalGenomicsInfrastructure-radqc/bin/samplesheet_gen.py /path/to/data/project_folder_with_fastqs/ samplsheet.csv\n```\n\nFor offline use the pipeline is downloaded using nf-core [tools](https://nf-co.re/tools) and including institutional configs specifically for Miarka/UPPMAX, e.g. `nf-core pipelines download -c yes -s singularity <pipeline name>`\n\n* `--trim_truncate 130` This is to trim the reads to a uniform length. Traditionally Stacks only supported uniform lengths, so consider skipping if the libraries have a much longer insert than 300 nt.\n* `--enzyme ecoRI` NGI rad-seq data made from digestion fragments of ecoRI\n* `--trim_head 5` EcoRI have a cut site / overhang (AATTC) that can lead to low complexity and low quality sequecing in the first 5 cycles. You can check if this the case by running fastQC on the raw data, but this parameter will trim the first 5 nts.\n* `--process_radtags_options='--disable-rad-check'` When we are trimming the cut site we need to instruct process_radtags to not check ecoRI sequences\n* `-profile singularity` Container system supported on UPPMAX\n\n\n## Credits\n\nNationalGenomicsInfrastructure/radqc was originally written by Remi-Andr\u00e9 Olsen.\n\nWe thank the following people for their extensive assistance in the development of this pipeline:\n\n\n## Contributions and Support\n\nIf you would like to contribute to this pipeline, please see the [contributing guidelines](.github/CONTRIBUTING.md).\n\n## Citations\n\nAn extensive list of references for the tools used by the pipeline can be found in the [`CITATIONS.md`](CITATIONS.md) file.\n\nThis pipeline uses code and infrastructure developed and maintained by the [nf-core](https://nf-co.re) community, reused here under the [MIT license](https://github.com/nf-core/tools/blob/main/LICENSE).\n\n> **The nf-core framework for community-curated bioinformatics pipelines.**\n>\n> Philip Ewels, Alexander Peltzer, Sven Fillinger, Harshil Patel, Johannes Alneberg, Andreas Wilm, Maxime Ulysse Garcia, Paolo Di Tommaso & Sven Nahnsen.\n>\n> _Nat Biotechnol._ 2020 Feb 13. doi: [10.1038/s41587-020-0439-x](https://dx.doi.org/10.1038/s41587-020-0439-x).\n",
+            "hasPart": [
+                {
+                    "@id": "main.nf"
+                },
+                {
+                    "@id": "assets/"
+                },
+                {
+                    "@id": "bin/"
+                },
+                {
+                    "@id": "conf/"
+                },
+                {
+                    "@id": "docs/"
+                },
+                {
+                    "@id": "modules/"
+                },
+                {
+                    "@id": "modules/local/"
+                },
+                {
+                    "@id": "modules/nf-core/"
+                },
+                {
+                    "@id": "workflows/"
+                },
+                {
+                    "@id": "subworkflows/"
+                },
+                {
+                    "@id": "nextflow.config"
+                },
+                {
+                    "@id": "README.md"
+                },
+                {
+                    "@id": "nextflow_schema.json"
+                },
+                {
+                    "@id": "CHANGELOG.md"
+                },
+                {
+                    "@id": "LICENSE"
+                },
+                {
+                    "@id": "CITATIONS.md"
+                },
+                {
+                    "@id": "modules.json"
+                },
+                {
+                    "@id": "docs/usage.md"
+                },
+                {
+                    "@id": "docs/output.md"
+                },
+                {
+                    "@id": ".nf-core.yml"
+                }
+            ],
+            "isBasedOn": "https://github.com/NationalGenomicsInfrastructure/radqc",
+            "license": "MIT",
+            "mainEntity": {
+                "@id": "main.nf"
+            },
+            "name": "NationalGenomicsInfrastructure/radqc"
         },
         {
-          "@id": "assets/"
+            "@id": "ro-crate-metadata.json",
+            "@type": "CreativeWork",
+            "about": {
+                "@id": "./"
+            },
+            "conformsTo": [
+                {
+                    "@id": "https://w3id.org/ro/crate/1.1"
+                },
+                {
+                    "@id": "https://w3id.org/workflowhub/workflow-ro-crate/1.0"
+                }
+            ]
         },
         {
-          "@id": "conf/"
+            "@id": "main.nf",
+            "@type": [
+                "File",
+                "SoftwareSourceCode",
+                "ComputationalWorkflow"
+            ],
+            "creator": [
+                {
+                    "@id": "#remi-andre.olsen@scilifelab.se"
+                }
+            ],
+            "dateCreated": "",
+            "dateModified": "2025-04-29T11:29:24Z",
+            "dct:conformsTo": "https://bioschemas.org/profiles/ComputationalWorkflow/1.0-RELEASE/",
+            "keywords": [
+                "nf-core",
+                "nextflow"
+            ],
+            "license": [
+                "MIT"
+            ],
+            "name": [
+                "NationalGenomicsInfrastructure/radqc"
+            ],
+            "programmingLanguage": {
+                "@id": "https://w3id.org/workflowhub/workflow-ro-crate#nextflow"
+            },
+            "sdPublisher": {
+                "@id": "https://nf-co.re/"
+            },
+            "url": [
+                "https://github.com/NationalGenomicsInfrastructure/radqc",
+                "https://nf-co.re/NationalGenomicsInfrastructure/radqc/0.3.1/"
+            ],
+            "version": [
+                "0.3.1"
+            ]
         },
         {
-          "@id": "docs/"
+            "@id": "https://w3id.org/workflowhub/workflow-ro-crate#nextflow",
+            "@type": "ComputerLanguage",
+            "identifier": {
+                "@id": "https://www.nextflow.io/"
+            },
+            "name": "Nextflow",
+            "url": {
+                "@id": "https://www.nextflow.io/"
+            },
+            "version": "!>=24.04.2"
         },
         {
-          "@id": "modules/"
+            "@id": "assets/",
+            "@type": "Dataset",
+            "description": "Additional files"
         },
         {
-          "@id": "modules/nf-core/"
+            "@id": "bin/",
+            "@type": "Dataset",
+            "description": "Scripts that must be callable from a pipeline process"
         },
         {
-          "@id": "workflows/"
+            "@id": "conf/",
+            "@type": "Dataset",
+            "description": "Configuration files"
         },
         {
-          "@id": "subworkflows/"
+            "@id": "docs/",
+            "@type": "Dataset",
+            "description": "Markdown files for documenting the pipeline"
         },
         {
-          "@id": "nextflow.config"
+            "@id": "modules/",
+            "@type": "Dataset",
+            "description": "Modules used by the pipeline"
         },
         {
-          "@id": "README.md"
+            "@id": "modules/local/",
+            "@type": "Dataset",
+            "description": "Pipeline-specific modules"
         },
         {
-          "@id": "nextflow_schema.json"
+            "@id": "modules/nf-core/",
+            "@type": "Dataset",
+            "description": "nf-core modules"
         },
         {
-          "@id": "CHANGELOG.md"
+            "@id": "workflows/",
+            "@type": "Dataset",
+            "description": "Main pipeline workflows to be executed in main.nf"
         },
         {
-          "@id": "LICENSE"
+            "@id": "subworkflows/",
+            "@type": "Dataset",
+            "description": "Smaller subworkflows"
         },
         {
-          "@id": "CITATIONS.md"
+            "@id": "nextflow.config",
+            "@type": "File",
+            "description": "Main Nextflow configuration file"
         },
         {
-          "@id": "modules.json"
+            "@id": "README.md",
+            "@type": "File",
+            "description": "Basic pipeline usage information"
         },
         {
-          "@id": "docs/usage.md"
+            "@id": "nextflow_schema.json",
+            "@type": "File",
+            "description": "JSON schema for pipeline parameter specification"
         },
         {
-          "@id": "docs/output.md"
+            "@id": "CHANGELOG.md",
+            "@type": "File",
+            "description": "Information on changes made to the pipeline"
         },
         {
-          "@id": ".nf-core.yml"
+            "@id": "LICENSE",
+            "@type": "File",
+            "description": "The license - should be MIT"
+        },
+        {
+            "@id": "CITATIONS.md",
+            "@type": "File",
+            "description": "Citations needed when using the pipeline"
+        },
+        {
+            "@id": "modules.json",
+            "@type": "File",
+            "description": "Version information for modules from nf-core/modules"
+        },
+        {
+            "@id": "docs/usage.md",
+            "@type": "File",
+            "description": "Usage documentation"
+        },
+        {
+            "@id": "docs/output.md",
+            "@type": "File",
+            "description": "Output documentation"
+        },
+        {
+            "@id": ".nf-core.yml",
+            "@type": "File",
+            "description": "nf-core configuration file, configuring template features and linting rules"
+        },
+        {
+            "@id": "https://nf-co.re/",
+            "@type": "Organization",
+            "name": "nf-core",
+            "url": "https://nf-co.re/"
+        },
+        {
+            "@id": "#remi-andre.olsen@scilifelab.se",
+            "@type": "Person",
+            "email": "remi-andre.olsen@scilifelab.se",
+            "name": "Remi-Andre Olsen"
         }
-      ],
-      "isBasedOn": "https://github.com/NationalGenomicsInfrastructure/radqc",
-      "license": "MIT",
-      "mainEntity": {
-        "@id": "main.nf"
-      },
-      "name": "NationalGenomicsInfrastructure/radqc"
-    },
-    {
-      "@id": "ro-crate-metadata.json",
-      "@type": "CreativeWork",
-      "about": {
-        "@id": "./"
-      },
-      "conformsTo": [
-        {
-          "@id": "https://w3id.org/ro/crate/1.1"
-        },
-        {
-          "@id": "https://w3id.org/workflowhub/workflow-ro-crate/1.0"
-        }
-      ]
-    },
-    {
-      "@id": "main.nf",
-      "@type": ["File", "SoftwareSourceCode", "ComputationalWorkflow"],
-      "dateCreated": "",
-      "dateModified": "2025-02-21T15:03:01Z",
-      "dct:conformsTo": "https://bioschemas.org/profiles/ComputationalWorkflow/1.0-RELEASE/",
-      "keywords": ["nf-core", "nextflow"],
-      "license": ["MIT"],
-      "name": ["NationalGenomicsInfrastructure/radqc"],
-      "programmingLanguage": {
-        "@id": "https://w3id.org/workflowhub/workflow-ro-crate#nextflow"
-      },
-      "sdPublisher": {
-        "@id": "https://nf-co.re/"
-      },
-      "url": [
-        "https://github.com/NationalGenomicsInfrastructure/radqc"
-      ],
-      "version": ["0.1.3dev"]
-    },
-    {
-      "@id": "https://w3id.org/workflowhub/workflow-ro-crate#nextflow",
-      "@type": "ComputerLanguage",
-      "identifier": {
-        "@id": "https://www.nextflow.io/"
-      },
-      "name": "Nextflow",
-      "url": {
-        "@id": "https://www.nextflow.io/"
-      },
-      "version": "!>=24.04.2"
-    },
-    {
-      "@id": "assets/",
-      "@type": "Dataset",
-      "description": "Additional files"
-    },
-    {
-      "@id": "conf/",
-      "@type": "Dataset",
-      "description": "Configuration files"
-    },
-    {
-      "@id": "docs/",
-      "@type": "Dataset",
-      "description": "Markdown files for documenting the pipeline"
-    },
-    {
-      "@id": "modules/",
-      "@type": "Dataset",
-      "description": "Modules used by the pipeline"
-    },
-    {
-      "@id": "modules/nf-core/",
-      "@type": "Dataset",
-      "description": "nf-core modules"
-    },
-    {
-      "@id": "workflows/",
-      "@type": "Dataset",
-      "description": "Main pipeline workflows to be executed in main.nf"
-    },
-    {
-      "@id": "subworkflows/",
-      "@type": "Dataset",
-      "description": "Smaller subworkflows"
-    },
-    {
-      "@id": "nextflow.config",
-      "@type": "File",
-      "description": "Main Nextflow configuration file"
-    },
-    {
-      "@id": "README.md",
-      "@type": "File",
-      "description": "Basic pipeline usage information"
-    },
-    {
-      "@id": "nextflow_schema.json",
-      "@type": "File",
-      "description": "JSON schema for pipeline parameter specification"
-    },
-    {
-      "@id": "CHANGELOG.md",
-      "@type": "File",
-      "description": "Information on changes made to the pipeline"
-    },
-    {
-      "@id": "LICENSE",
-      "@type": "File",
-      "description": "The license - should be MIT"
-    },
-    {
-      "@id": "CITATIONS.md",
-      "@type": "File",
-      "description": "Citations needed when using the pipeline"
-    },
-    {
-      "@id": "modules.json",
-      "@type": "File",
-      "description": "Version information for modules from nf-core/modules"
-    },
-    {
-      "@id": "docs/usage.md",
-      "@type": "File",
-      "description": "Usage documentation"
-    },
-    {
-      "@id": "docs/output.md",
-      "@type": "File",
-      "description": "Output documentation"
-    },
-    {
-      "@id": ".nf-core.yml",
-      "@type": "File",
-      "description": "nf-core configuration file, configuring template features and linting rules"
-    },
-    {
-      "@id": "https://nf-co.re/",
-      "@type": "Organization",
-      "name": "nf-core",
-      "url": "https://nf-co.re/"
-    }
-  ]
+    ]
 }
