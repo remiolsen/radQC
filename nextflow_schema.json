@@ -83,6 +83,20 @@
             "help_text": "You will need to create a design file with information about the samples in your experiment before running the pipeline. Use this parameter to specify its location. It has to be a comma-separated file with 3 columns, and a header row.",
             "fa_icon": "fas fa-file-csv"
           },
+          "save_intermediates": {
+            "type": "boolean",
+            "default": false,
+            "description": "Save intermediate files.",
+            "fa_icon": "fas fa-file-archive",
+            "help_text": "Set this parameter to `true` to save intermediate (fastq) files. This will increase the amount of disk space used by the pipeline, but can be useful for debugging."
+          },
+          "dont_save_radtags": {
+            "type": "boolean",
+            "default": false,
+            "description": "Do not save the radtags files.",
+            "fa_icon": "fas fa-file-archive",
+            "help_text": "Set this parameter to `true` to not save the processed radtag fastq files. This will reduce the amount of disk space used by the pipeline."
+          },
           "outdir": {
             "type": "string",
             "format": "directory-path",
